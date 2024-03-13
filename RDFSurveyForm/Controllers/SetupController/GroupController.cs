@@ -40,6 +40,8 @@ namespace RDFSurveyForm.Controllers.SetupController
             if(groupExist == false && group.GroupName != updateGroup.GroupName) 
             {
                 return Ok("Group Name Already Exist!");
+
+       
             }
 
             var groupId = await _unitOfWork.Groups.UpdateGroup(group);
@@ -50,8 +52,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Update Successfuly!");
         }
 
-        //[HttpGet("GroupListPagnation")]
-        //public async Task<IActionResult<IEnumerable<GetGroupDto>>
+
     }
 
 }
