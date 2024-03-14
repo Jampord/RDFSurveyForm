@@ -146,16 +146,14 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
         public async Task<bool> SetInActive(int Id)
         {
-            var setinactive = await _context.Customer.FirstOrDefaultAsync(s => s.Id == Id);
-            if (setinactive != null)
+            var setInactive = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
+            if (setInactive != null)
             {
-
-                setinactive.InActive = !setinactive.InActive;
-
+                setInactive.InActive = !setInactive.InActive;
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
 
         public async Task<bool> WrongPassword(ChangePasswordDto users)

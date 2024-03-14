@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RDFSurveyForm.Data;
+using RDFSurveyForm.DATA_ACCESS_LAYER.EXTENSIONS;
+using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
 using RDFSurveyForm.Services;
+using System.Runtime.CompilerServices;
 
 namespace RDFSurveyForm.Controllers.SetupController
 {
@@ -52,7 +55,46 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Update Successfuly!");
         }
 
+        [HttpGet("GroupListPagnation")]
+        public async Task<ActionResult<IEnumerable<GetGroupDto>>> GroupListPagnation([FromQuery] UserParams userParams, bool ? status, string search)
+        {
+            var posummary = await _unitOfWork.Groups.GroupListPagnation(userParams, status, search);
+            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
 
+            var posummaryResult = new
+            {
+                posummary,
+                posummary.CurrentPage,
+                posummary.PageSize,
+                posummary.TotalCount,
+                posummary.TotalPages,
+                posummary.HasNextPage,
+                posummary.HasPreviousPage
+            };
+            return Ok(posummaryResult);
+        }
+
+        [HttpGet("Setinactive/{Id:int}")]
+        public async Task<IActionResult> SetInactive([FromRoute] int Id)
+        {
+            var setinactive = await _unitOfWork.Groups.SetInactive(Id);
+            if(setinactive == false)
+            {
+                return BadRequest("Group does not exist!");
+            }
+            return Ok("Updated");
+        }
+
+        [HttpDelete("DeleteGroup/{Id:int}")]
+        public async Task<IActionResult> DeleteGroup([FromRoute] int Id)
+        {
+            var deleteGroup = await _unitOfWork.Groups.DeleteGroup(Id);
+            if (deleteGroup == false)
+            {
+                return BadRequest("Group Does not Exist!");
+            }
+            return Ok("Group Deleted");
+        }
     }
 
 }

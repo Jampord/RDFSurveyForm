@@ -33,9 +33,10 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             var addGroup = new Groups
             {
                 Id = group.Id,
-                GroupName = group.GroupName,                
+                GroupName = group.GroupName,    
+                BranchId = group.BranchId,
                 CreatedAt = DateTime.Now,
-                CreatedBy = group.CreatedBy,
+                CreatedBy = group.CreatedBy, 
             };
             await _context.Groups.AddAsync(addGroup);
             await _context.SaveChangesAsync();
@@ -52,6 +53,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 updateGroup.GroupName = group.GroupName;
                 updateGroup.UpdatedAt = DateTime.Now;
                 updateGroup.UpdatedBy = group.UpdatedBy;
+                updateGroup.BranchId = group.BranchId;
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -59,10 +61,9 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return false;
         }
 
-        public async Task<PagedList<GetGroupDto>> CustomerListPagnation(UserParams userParams, bool? status, string search)
+        public async Task<PagedList<GetGroupDto>> GroupListPagnation(UserParams userParams, bool? status, string search)
         {
-
-            var result = _context.Groups.Select(x => new GetGroupDto
+            var users = _context.Groups.Select(x => new GetGroupDto
             {
                 Id = x.Id,
                 GroupName = x.GroupName,
@@ -71,20 +72,24 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 IsActive = x.IsActive,
                 UpdatedAt = x.UpdatedAt,
                 UpdatedBy = x.UpdatedBy,
+                BranchId = x.BranchId,
+                BranchName = x.Branch.BranchName,
+
             });
 
             if (status != null)
             {
-                result = result.Where(x => x.IsActive == status);
+                users = users.Where(x => x.IsActive == status);
             }
 
             if (!string.IsNullOrEmpty(search))
             {
-                result = result.Where(x => Convert.ToString(x.Id).ToLower().Contains(search.Trim().ToLower())
-                || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower()));
+                users = users.Where(x => Convert.ToString(x.Id).ToLower().Contains(search.Trim().ToLower())
+                || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
+                || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower()));
             }
 
-            return await PagedList<GetGroupDto>.CreateAsync(result, userParams.PageNumber, userParams.PageSize);
+            return await PagedList<GetGroupDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> DeleteGroup(int Id)
@@ -105,9 +110,10 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             if (setInactive != null)
             {
                 setInactive.IsActive = !setInactive.IsActive;
+                await _context.SaveChangesAsync();
+                return true;
             }
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
     }
 }

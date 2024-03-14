@@ -8,7 +8,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Interface
         Task<bool> GroupAlreadyExist(string groupName);
         Task<bool> AddGroup(AddGroupDto group);
         Task<bool> UpdateGroup(UpdateGroupDto group);
-        Task<PagedList<GetGroupDto>> CustomerListPagnation(UserParams userParams, bool? status, string search);
+        Task<PagedList<GetGroupDto>> GroupListPagnation(UserParams userParams, bool? status, string search);
         Task<bool> DeleteGroup(int Id);
         Task<bool> SetInactive(int Id);
     }

@@ -60,8 +60,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return false;
         }
 
-        public async Task<PagedList<GetBranchDto>> CustomerListPagnation(UserParams userParams, bool? status, string search)
-        {
+        public async Task<PagedList<GetBranchDto>> BranchListPagnation(UserParams userParams, bool? status, string search)
+        {           
 
             var result = _context.Branches.Select(x => new GetBranchDto
             {
@@ -73,6 +73,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 IsActive = x.IsActive,
                 UpdatedAt = x.UpdatedAt,
                 UpdatedBy = x.UpdatedBy,
+
             });
 
             if (status != null)
@@ -108,9 +109,10 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             if (setInactive != null)
             {
                 setInactive.IsActive = !setInactive.IsActive;
+                await _context.SaveChangesAsync();
+                return true;
             }
-            await _context.SaveChangesAsync();
-            return true;
+            return false;
         }
     }
 }

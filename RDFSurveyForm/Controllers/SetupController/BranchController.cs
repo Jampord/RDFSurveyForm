@@ -59,7 +59,7 @@ namespace RDFSurveyForm.Controllers.SetupController
         [HttpGet("BranchListPagnation")]
         public async Task<ActionResult<IEnumerable<GetBranchDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.Branches.CustomerListPagnation(userParams, status, search);
+            var posummary = await _unitOfWork.Branches.BranchListPagnation(userParams, status, search);
 
             Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
 

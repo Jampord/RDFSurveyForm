@@ -83,14 +83,14 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
         public async Task<bool> SetInActive(int Id)
         {
-            var setinactive = await _context.CRole.FirstOrDefaultAsync(s => s.Id == Id);
-            if (setinactive != null)
+            var setInactive = await _context.CRole.FirstOrDefaultAsync(x => x.Id == Id);
+            if (setInactive != null)
             {
-
-                setinactive.IsActive = !setinactive.IsActive;
+                setInactive.IsActive = !setInactive.IsActive;
+                await _context.SaveChangesAsync();
+                return true;
             }
-
-            return true;
+            return false;
         }
 
         public async Task<PagedList<GetRoleDto>> CustomerListPagnation(UserParams userParams, bool? status, string search)

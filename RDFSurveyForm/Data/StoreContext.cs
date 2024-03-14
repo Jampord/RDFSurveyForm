@@ -18,6 +18,7 @@ namespace RDFSurveyForm.Data
         public virtual DbSet<Department> Department { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
+        public virtual DbSet<Category> Category { get; set; }
 
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

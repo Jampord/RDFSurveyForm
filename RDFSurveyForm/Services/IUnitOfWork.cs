@@ -13,6 +13,7 @@ namespace RDFSurveyForm.Services
         IDepartmentRepository Department { get; }
         IBranchRepository Branches { get; }
         IGroupRepository Groups { get; }
+        ICategoryRepository Category { get; }
         Task CompleteAsync();
 
     }
