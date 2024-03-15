@@ -33,7 +33,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             {
                 Id = branch.Id,
                 BranchName = branch.BranchName,
-                BranchDescription = branch.BranchDescription,
+                BranchCode = branch.BranchCode,
                 CreatedAt = DateTime.Now,
                 CreatedBy = branch.CreatedBy,
             };
@@ -50,7 +50,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             if(updateBranch != null) 
             {
                 updateBranch.BranchName = branch.BranchName;
-                updateBranch.BranchDescription = branch.BranchDescription;
+                updateBranch.BranchCode = branch.BranchCode;
                 updateBranch.UpdatedAt = DateTime.Now;
                 updateBranch.UpdatedBy = branch.UpdatedBy;
                 
@@ -67,7 +67,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             {
                 Id = x.Id,
                 BranchName = x.BranchName,
-                BranchDescription = x.BranchDescription,
+                BranchCode = x.BranchCode,
                 CreatedAt = x.CreatedAt,
                 CreatedBy = x.CreatedBy,
                 IsActive = x.IsActive,
@@ -85,7 +85,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             {
                 result = result.Where(x => Convert.ToString(x.Id).ToLower().Contains(search.Trim().ToLower())
                 || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower())
-                || Convert.ToString(x.BranchDescription).ToLower().Contains(search.Trim().ToLower()));
+                || Convert.ToString(x.BranchCode).ToLower().Contains(search.Trim().ToLower()));
             }
 
             return await PagedList<GetBranchDto>.CreateAsync(result, userParams.PageNumber, userParams.PageSize);

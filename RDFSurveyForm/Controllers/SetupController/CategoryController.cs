@@ -29,7 +29,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             var categoryChecker = await _unitOfWork.Category.PercentageChecker(category);
             if (categoryChecker == false)
             {
-                return BadRequest("% exceeded 100%!");
+                return BadRequest("% exceeded 100%");
             }
             var categoryExist = await _unitOfWork.Category.CategoryAlreadyExist(category.CategoryName);
             if (categoryExist == false)

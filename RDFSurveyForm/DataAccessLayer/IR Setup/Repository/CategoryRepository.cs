@@ -35,24 +35,6 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> PercentageChecker(AddCategoryDto category)
         {
-            //var totalpercentage = 0;
-            //var percentageCheker = await _context.Category.ToListAsync(x => x.Categ);
-
-            //if (totalpercentage)
-            //{
-            //    return true;
-            //}
-            //return false;
-
-            //        var sums = _context.Category
-            //          .GroupBy(x => true)
-            //          .Select(x => new
-            //{
-            //    SumColumn1 = x.Sum(y => y.CategoryPercentage),
-
-            //});
-            //        await _context.SaveChangesAsync();
-            //        return true;
 
             var percentage = category.CategoryPercentage * .01M;
             var users = await _context.Category.ToListAsync();
@@ -87,7 +69,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             if (updateCategory != null)
             {
                 updateCategory.CategoryName = category.CategoryName;
-                //updateCategory.CategoryPercentage = category.CategoryPercentage * .01;
+                updateCategory.CategoryPercentage = category.CategoryPercentage * .01M;
                 updateCategory.UpdatedAt = DateTime.Now;
                 updateCategory.UpdatedBy = category.UpdatedBy;
 

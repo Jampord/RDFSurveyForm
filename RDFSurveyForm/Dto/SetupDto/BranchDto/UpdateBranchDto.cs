@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string BranchName { get; set; }
-        public string BranchDescription { get; set; }
+        public string BranchCode { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string UpdatedBy { get; set; }
     }

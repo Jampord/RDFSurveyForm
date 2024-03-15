@@ -32,7 +32,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         {
             var addGroup = new Groups
             {
-                Id = group.Id,
+                
                 GroupName = group.GroupName,    
                 BranchId = group.BranchId,
                 CreatedAt = DateTime.Now,
@@ -47,7 +47,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         public async Task<bool> UpdateGroup(UpdateGroupDto group)
         {
 
-            var updateGroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == group.Id);
+            var updateGroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == group.Id); 
             if (updateGroup != null)
             {
                 updateGroup.GroupName = group.GroupName;

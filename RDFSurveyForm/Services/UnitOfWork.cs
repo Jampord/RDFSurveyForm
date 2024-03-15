@@ -17,7 +17,7 @@ namespace RDFSurveyForm.Services
         public IBranchRepository Branches { get; set; }
         public IGroupRepository Groups { get; set; }
         public ICategoryRepository Category { get; set;}
-
+        public IQuestionsRepository Question { get; set;}
         public UnitOfWork(StoreContext context)
         {
             _context = context;
@@ -33,6 +33,8 @@ namespace RDFSurveyForm.Services
             Groups = new GroupRepository(_context);
 
             Category = new CategoryRepository(_context);
+
+            Question = new QuestionsRepository(_context);
         }
 
         public async Task CompleteAsync()
