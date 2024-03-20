@@ -5,6 +5,7 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
 {
     public interface IDepartmentRepository
     {
+        Task<bool> ExistingDepartment(string department);
         Task<bool> AddDepartment(AddDepartmentDto department);
         Task<bool> UpdateDepartment(UpdateDepartmentDto department);
         Task<bool> SetInActive(int Id);

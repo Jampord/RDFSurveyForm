@@ -5,6 +5,7 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
 {
     public interface IRoleRepository
     {
+        Task<bool> RoleExist(string role);
         Task<bool> AddNewRole(AddRoleDto role);
         Task<bool> UpdateRole(UpdateRoleDto role);
         Task<bool> SetInActive(int Id);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RDFSurveyForm.Data;
 using RDFSurveyForm.DATA_ACCESS_LAYER.EXTENSIONS;
 using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
@@ -81,6 +82,26 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok(users);
         }
 
+        [HttpPut("UpdateScore/{surveyGeneratorId:int}")]
 
+        public async Task<IActionResult> UpdateScore([FromBody] UpdateSurveyScoreDto score, [FromRoute] int surveyGeneratorId)
+        {
+            score.SurveyGeneratorId = surveyGeneratorId;
+            var limit = await _unitofWork.GroupSurvey.ScoreLimit(score);
+            
+
+            var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
+
+            if(limit == false)
+            {
+                return BadRequest("Score exceeded the limit!");
+            }
+            if(surveyscore == null)
+            {
+                return BadRequest("ID does not exist!");
+            }
+            
+            return Ok("Score Added Successfuly!");
+        }
     }
 }

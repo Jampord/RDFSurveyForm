@@ -16,6 +16,16 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             _context = context;
         }
 
+
+        public async Task<bool> RoleExist(string role)
+        {
+            var roleExist = await _context.CRole.FirstOrDefaultAsync(x => x.RoleName == role);
+            if (roleExist == null)
+            {
+                return true;
+            }
+            return false;
+        }
         public async Task<bool> AddNewRole(AddRoleDto role)
         {
             var addrole = new Role

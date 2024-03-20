@@ -23,6 +23,12 @@ namespace RDFSurveyForm.Controllers.ModelController
         [Route("AddNewDepartment")]
         public async Task<IActionResult> AddDepartment(AddDepartmentDto department)
         {
+            var existingDept = await _unitOfWork.Department.ExistingDepartment(department.DepartmentName);
+
+            if(existingDept == false)
+            {
+                return BadRequest("Department Name already exist!");
+            }
             await _unitOfWork.Department.AddDepartment(department);
 
             return Ok("Success");

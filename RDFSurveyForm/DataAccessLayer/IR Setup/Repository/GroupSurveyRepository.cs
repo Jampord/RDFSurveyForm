@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RDFSurveyForm.Data;
 using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
+using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
 using RDFSurveyForm.Dto.SetupDto.GroupSurveyDto;
 using RDFSurveyForm.Model.Setup;
@@ -118,6 +119,38 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 }).ToListAsync();
 
             return await results;
-        }            
+        }
+
+        public async Task<bool> ScoreLimit(UpdateSurveyScoreDto limit)
+        {
+            var limits = limit.Score;
+            var scoreLimit = await _context.SurveyScores.AnyAsync(x => x.Score ==  limit.Score);
+            if(limits > 100)
+            {
+                return false;
+            }
+            return true;
+        }
+        //public async Task<bool> UpdateScore(UpdateSurveyScoreDto score)
+        //{
+        //    var transacted = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == score.SurveyGeneratorId);
+
+
+        //    var categoryList = await _context.Category.ToListAsync();
+        //    foreach (var items in categoryList)
+        //    {
+        //        if (updateScore != null)
+        //        {
+        //            updateScore.UpdatedBy = score.UpdatedBy;
+        //            updateScore.UpdatedAt = score.UpdatedAt;
+        //            transacted.IsTransacted = true;
+        //        }
+
+        //    };
+        //    await _context.SaveChangesAsync();
+
+        //    return true;
+
+        //}
     }
 }

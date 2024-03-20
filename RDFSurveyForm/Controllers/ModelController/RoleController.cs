@@ -23,6 +23,11 @@ namespace RDFSurveyForm.Controllers.ModelController
         [Route("AddNewRole")]
         public async Task<IActionResult> AddNewRole(AddRoleDto role)
         {
+            var roleExist = await _unitOfWork.CRole.RoleExist(role.RoleName);
+            if(roleExist == false)
+            {
+                return BadRequest("Role already exist!");
+            }
             await _unitOfWork.CRole.AddNewRole(role);
 
             return Ok("Success");

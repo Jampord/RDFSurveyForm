@@ -17,6 +17,15 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             _context = context;
         }
 
+        public async Task<bool> ExistingDepartment(string department)
+        {
+            var existingDepartment = await _context.Department.FirstOrDefaultAsync(x => x.DepartmentName == department);
+            if (existingDepartment == null)
+            {
+                return true;
+            }
+            return false;
+        }
         public async Task<bool> AddDepartment(AddDepartmentDto department)
         {
             var AddDept = new Department
