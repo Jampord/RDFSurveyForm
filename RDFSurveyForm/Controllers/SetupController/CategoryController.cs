@@ -65,23 +65,23 @@ namespace RDFSurveyForm.Controllers.SetupController
         [HttpGet("CategoryListPagnation")]
         public async Task<ActionResult<IEnumerable<GetCategoryDto>>> CategoryListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.Category.CategoryPagnation(userParams, status, search);
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            var categorysummary = await _unitOfWork.Category.CategoryPagnation(userParams, status, search);
+            Response.AddPaginationHeader(categorysummary.CurrentPage, categorysummary.PageSize, categorysummary.TotalCount, categorysummary.TotalPages, categorysummary.HasNextPage, categorysummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var categorysummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                categorysummary,
+                categorysummary.CurrentPage,
+                categorysummary.PageSize,
+                categorysummary.TotalCount,
+                categorysummary.TotalPages,
+                categorysummary.HasNextPage,
+                categorysummary.HasPreviousPage
             };
-            return Ok(posummaryResult);
+            return Ok(categorysummaryResult);
         }
 
-        [HttpGet("Setinactive/{Id:int}")]
+        [HttpPatch("Setinactive/{Id:int}")]
         public async Task<IActionResult> SetInactive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.Category.SetInactive(Id);
@@ -92,15 +92,6 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Updated");
         }
 
-        [HttpDelete("DeleteGroup/{Id:int}")]
-        public async Task<IActionResult> DeleteGroup([FromRoute] int Id)
-        {
-            var deleteGroup = await _unitOfWork.Category.DeleteCategory(Id);
-            if (deleteGroup == false)
-            {
-                return BadRequest("Category Does not Exist!");
-            }
-            return Ok("Group Deleted");
-        }
+        
     }
 }

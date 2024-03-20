@@ -5,7 +5,8 @@ using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.Dto.SetupDto.BranchDto;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
 using RDFSurveyForm.Migrations;
-using RDFSurveyForm.Setup;
+using RDFSurveyForm.Model.Setup;
+
 
 namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 {
@@ -92,17 +93,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await PagedList<GetGroupDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<bool> DeleteGroup(int Id)
-        {
-            var deletegroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == Id);
-            if (deletegroup != null)
-            {
-                _context.Groups.Remove(deletegroup);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+       
 
         public async Task<bool> SetInactive(int Id)
         {

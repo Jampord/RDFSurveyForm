@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDFSurveyForm.Data;
 
@@ -11,9 +12,11 @@ using RDFSurveyForm.Data;
 namespace RDFSurveyForm.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240319074018_addrelationshipGroupSurveyAndSurveyScore")]
+    partial class addrelationshipGroupSurveyAndSurveyScore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,6 +172,9 @@ namespace RDFSurveyForm.Migrations
                     b.Property<int?>("SurveyGeneratorId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("SurveyScoreId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
@@ -180,6 +186,8 @@ namespace RDFSurveyForm.Migrations
                     b.HasIndex("GroupsId");
 
                     b.HasIndex("SurveyGeneratorId");
+
+                    b.HasIndex("SurveyScoreId");
 
                     b.ToTable("GroupSurvey");
                 });
@@ -292,6 +300,9 @@ namespace RDFSurveyForm.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("FinalScore")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -371,9 +382,15 @@ namespace RDFSurveyForm.Migrations
                         .WithMany("GroupSurveys")
                         .HasForeignKey("SurveyGeneratorId");
 
+                    b.HasOne("RDFSurveyForm.Model.Setup.SurveyScore", "SurveyScore")
+                        .WithMany("GroupSurveys")
+                        .HasForeignKey("SurveyScoreId");
+
                     b.Navigation("Groups");
 
                     b.Navigation("SurveyGenerator");
+
+                    b.Navigation("SurveyScore");
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Groups", b =>
@@ -448,6 +465,11 @@ namespace RDFSurveyForm.Migrations
                     b.Navigation("GroupSurveys");
 
                     b.Navigation("SurveyScores");
+                });
+
+            modelBuilder.Entity("RDFSurveyForm.Model.Setup.SurveyScore", b =>
+                {
+                    b.Navigation("GroupSurveys");
                 });
 #pragma warning restore 612, 618
         }

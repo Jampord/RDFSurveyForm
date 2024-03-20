@@ -115,41 +115,31 @@ namespace RDFSurveyForm.Controllers.ModelController
         }
 
 
-        [HttpDelete("DeleteUser/{Id:int}")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int Id)
-        {
-            var userss = await _unitOfWork.Customer.DeleteUser(Id);
-            if (userss == false)
-            {
-                return BadRequest("ID does not exist");
-            }
-            return Ok("Deleted!");
-
-        }
+        
 
         [HttpGet]
         [Route("CustomerListPagnation")]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.Customer.CustomerListPagnation(userParams, status, search);
+            var usersummary = await _unitOfWork.Customer.CustomerListPagnation(userParams, status, search);
 
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            Response.AddPaginationHeader(usersummary.CurrentPage, usersummary.PageSize, usersummary.TotalCount, usersummary.TotalPages, usersummary.HasNextPage, usersummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var usersummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                usersummary,
+                usersummary.CurrentPage,
+                usersummary.PageSize,
+                usersummary.TotalCount,
+                usersummary.TotalPages,
+                usersummary.HasNextPage,
+                usersummary.HasPreviousPage
             };
 
-            return Ok(posummaryResult);
+            return Ok(usersummaryResult);
         }
 
-        [HttpPut("SetInActive/{Id:int}")]
+        [HttpPatch("SetInActive/{Id:int}")]
         public async Task<IActionResult> SetInActive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.Customer.SetInActive(Id);
@@ -160,15 +150,6 @@ namespace RDFSurveyForm.Controllers.ModelController
             return Ok("Updated");
         }
 
-        //[HttpGet("ListUsers/{Inactivity:int}")]
-        //public async Task<IActionResult> ListUser([FromRoute] GetUserDto user)
-        //{
-        //    var listUser = await _unitOfWork.Customer.ListUser(user);
-        //    if(listUser == null)
-        //    {
-        //        return BadRequest("Nada");
-        //    }
-        //    return Ok(listUser);
-        //}
+        
     }
 }

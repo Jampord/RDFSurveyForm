@@ -58,23 +58,23 @@ namespace RDFSurveyForm.Controllers.SetupController
         [HttpGet("GroupListPagnation")]
         public async Task<ActionResult<IEnumerable<GetGroupDto>>> GroupListPagnation([FromQuery] UserParams userParams, bool ? status, string search)
         {
-            var posummary = await _unitOfWork.Groups.GroupListPagnation(userParams, status, search);
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            var gcsummary = await _unitOfWork.Groups.GroupListPagnation(userParams, status, search);
+            Response.AddPaginationHeader(gcsummary.CurrentPage, gcsummary.PageSize, gcsummary.TotalCount, gcsummary.TotalPages, gcsummary.HasNextPage, gcsummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var gcsummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                gcsummary,
+                gcsummary.CurrentPage,
+                gcsummary.PageSize,
+                gcsummary.TotalCount,
+                gcsummary.TotalPages,
+                gcsummary.HasNextPage,
+                gcsummary.HasPreviousPage
             };
-            return Ok(posummaryResult);
+            return Ok(gcsummaryResult);
         }
 
-        [HttpGet("Setinactive/{Id:int}")]
+        [HttpPatch("Setinactive/{Id:int}")]
         public async Task<IActionResult> SetInactive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.Groups.SetInactive(Id);
@@ -85,16 +85,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Updated");
         }
 
-        [HttpDelete("DeleteGroup/{Id:int}")]
-        public async Task<IActionResult> DeleteGroup([FromRoute] int Id)
-        {
-            var deleteGroup = await _unitOfWork.Groups.DeleteGroup(Id);
-            if (deleteGroup == false)
-            {
-                return BadRequest("Group Does not Exist!");
-            }
-            return Ok("Group Deleted");
-        }
+        
     }
 
 }

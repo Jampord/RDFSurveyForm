@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDFSurveyForm.Data;
 
@@ -11,9 +12,11 @@ using RDFSurveyForm.Data;
 namespace RDFSurveyForm.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240319041436_branchnameadded")]
+    partial class branchnameadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,6 +283,9 @@ namespace RDFSurveyForm.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("BranchName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CategoryName")
                         .HasColumnType("nvarchar(max)");
 
@@ -367,13 +373,13 @@ namespace RDFSurveyForm.Migrations
                         .WithMany("GroupSurvey")
                         .HasForeignKey("GroupsId");
 
-                    b.HasOne("RDFSurveyForm.Model.Setup.SurveyGenerator", "SurveyGenerator")
-                        .WithMany("GroupSurveys")
+                    b.HasOne("RDFSurveyForm.Model.Setup.SurveyGenerator", "Generator")
+                        .WithMany("Surveys")
                         .HasForeignKey("SurveyGeneratorId");
 
-                    b.Navigation("Groups");
+                    b.Navigation("Generator");
 
-                    b.Navigation("SurveyGenerator");
+                    b.Navigation("Groups");
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Groups", b =>
@@ -445,9 +451,9 @@ namespace RDFSurveyForm.Migrations
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.SurveyGenerator", b =>
                 {
-                    b.Navigation("GroupSurveys");
-
                     b.Navigation("SurveyScores");
+
+                    b.Navigation("Surveys");
                 });
 #pragma warning restore 612, 618
         }

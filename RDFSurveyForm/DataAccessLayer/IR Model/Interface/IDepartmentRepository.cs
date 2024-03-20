@@ -7,7 +7,6 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
     {
         Task<bool> AddDepartment(AddDepartmentDto department);
         Task<bool> UpdateDepartment(UpdateDepartmentDto department);
-        Task<bool> DeleteDepartment(int Id);
         Task<bool> SetInActive(int Id);
         Task<PagedList<GetDepartmentDto>> CustomerListPagnation(UserParams userParams, bool ? status, string search);
 

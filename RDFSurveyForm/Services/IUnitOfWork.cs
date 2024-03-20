@@ -14,7 +14,11 @@ namespace RDFSurveyForm.Services
         IBranchRepository Branches { get; }
         IGroupRepository Groups { get; }
         ICategoryRepository Category { get; }
-        IQuestionsRepository Question { get; }
+
+        IGroupSurveyRepository GroupSurvey { get; }
+        ISurveyScoreRepository SurveyScores { get; }
+        IGeneratorRepository Generator { get; }
+
         Task CompleteAsync();
 
     }

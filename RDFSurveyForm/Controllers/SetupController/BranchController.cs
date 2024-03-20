@@ -59,25 +59,25 @@ namespace RDFSurveyForm.Controllers.SetupController
         [HttpGet("BranchListPagnation")]
         public async Task<ActionResult<IEnumerable<GetBranchDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.Branches.BranchListPagnation(userParams, status, search);
+            var branchsummary = await _unitOfWork.Branches.BranchListPagnation(userParams, status, search);
 
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            Response.AddPaginationHeader(branchsummary.CurrentPage, branchsummary.PageSize, branchsummary.TotalCount, branchsummary.TotalPages, branchsummary.HasNextPage, branchsummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var branchsummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                branchsummary,
+                branchsummary.CurrentPage,
+                branchsummary.PageSize,
+                branchsummary.TotalCount,
+                branchsummary.TotalPages,
+                branchsummary.HasNextPage,
+                branchsummary.HasPreviousPage
             };
 
-            return Ok(posummaryResult);
+            return Ok(branchsummaryResult);
         }
 
-        [HttpGet("SetInactive/{Id:int}")]
+        [HttpPatch("SetInactive/{Id:int}")]
         public async Task<IActionResult> SetInactive([FromRoute]int Id)
         {
             var setinactive = await _unitOfWork.Branches.SetInactive(Id);
@@ -88,15 +88,6 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Updated!");
         }
 
-        [HttpDelete("Deletebranch/{Id:int}")]
-        public async Task<IActionResult> DeleteBranch([FromRoute] int Id)
-        {
-            var deleteBranch = await _unitOfWork.Branches.DeleteBranch(Id);
-            if(deleteBranch == false) 
-            {
-                return BadRequest("Branch Does not Exist!");
-            }
-            return Ok("Branch Deleted!");
-        }
+        
     }
 }

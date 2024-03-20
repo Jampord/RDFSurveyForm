@@ -5,8 +5,8 @@ using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.CategoryDto;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
+using RDFSurveyForm.Model.Setup;
 using RDFSurveyForm.Services;
-using RDFSurveyForm.Setup;
 using System.Linq;
 
 namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
@@ -110,17 +110,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await PagedList<GetCategoryDto>.CreateAsync(category, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<bool> DeleteCategory(int Id)
-        {
-            var deleteCategory = await _context.Category.FirstOrDefaultAsync(x => x.Id == Id);
-            if(deleteCategory != null)
-            {
-                _context.Category.Remove(deleteCategory);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        
 
         public async Task<bool> SetInactive(int Id)
         {

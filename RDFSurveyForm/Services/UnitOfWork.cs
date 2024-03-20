@@ -3,7 +3,7 @@ using RDFSurveyForm.DataAccessLayer.Interface;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Repository;
 using RDFSurveyForm.DataAccessLayer.Repository;
-using RDFSurveyForm.Setup;
+
 
 namespace RDFSurveyForm.Services
 {
@@ -17,7 +17,13 @@ namespace RDFSurveyForm.Services
         public IBranchRepository Branches { get; set; }
         public IGroupRepository Groups { get; set; }
         public ICategoryRepository Category { get; set;}
-        public IQuestionsRepository Question { get; set;}
+
+        public IGroupSurveyRepository GroupSurvey { get; }
+        public ISurveyScoreRepository SurveyScore { get; }
+        public IGeneratorRepository Generator { get; }
+
+        public ISurveyScoreRepository SurveyScores => throw new NotImplementedException();
+
         public UnitOfWork(StoreContext context)
         {
             _context = context;
@@ -34,7 +40,13 @@ namespace RDFSurveyForm.Services
 
             Category = new CategoryRepository(_context);
 
-            Question = new QuestionsRepository(_context);
+            //Question = new QuestionsRepository(_context);
+
+            GroupSurvey = new GroupSurveyRepository(_context);
+
+            //SurveyScores = new SurveyScoreRepository(_context);
+
+            //Generator = new GeneratorRepository(_context);
         }
 
         public async Task CompleteAsync()

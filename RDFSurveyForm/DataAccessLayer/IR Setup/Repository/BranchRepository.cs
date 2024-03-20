@@ -4,7 +4,8 @@ using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.BranchDto;
-using RDFSurveyForm.Setup;
+using RDFSurveyForm.Model.Setup;
+
 
 namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 {
@@ -91,17 +92,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await PagedList<GetBranchDto>.CreateAsync(result, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<bool> DeleteBranch(int Id)
-        {
-            var deleteBranch = await _context.Branches.FirstOrDefaultAsync(x => x.Id == Id);
-            if(deleteBranch != null)
-            {
-                _context.Branches.Remove(deleteBranch);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        
 
         public async Task<bool> SetInactive(int Id)
         {

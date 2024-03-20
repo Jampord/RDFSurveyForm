@@ -54,19 +54,9 @@ namespace RDFSurveyForm.Controllers.ModelController
 
 
 
-        [HttpDelete("DeleteRole/{Id:int}")]
-        public async Task<IActionResult> DeleteRole([FromRoute] int Id)
-        {
-            var roles = await _unitOfWork.CRole.DeleteRole(Id);
-            if (roles == false)
-            {
-                return BadRequest("ID does not exist");
-            }
-            return Ok("Deleted!");
+       
 
-        }
-
-        [HttpPut("SetInActive/{Id:int}")]
+        [HttpPatch("SetInActive/{Id:int}")]
         public async Task<IActionResult> SetInActive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.CRole.SetInActive(Id);
@@ -85,22 +75,22 @@ namespace RDFSurveyForm.Controllers.ModelController
         [Route("CustomerListPagnation")]
         public async Task<ActionResult<IEnumerable<GetRoleDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.CRole.CustomerListPagnation(userParams, status, search);
+            var rolesummary = await _unitOfWork.CRole.CustomerListPagnation(userParams, status, search);
 
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            Response.AddPaginationHeader(rolesummary.CurrentPage, rolesummary.PageSize, rolesummary.TotalCount, rolesummary.TotalPages, rolesummary.HasNextPage, rolesummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var rolesummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                rolesummary,
+                rolesummary.CurrentPage,
+                rolesummary.PageSize,
+                rolesummary.TotalCount,
+                rolesummary.TotalPages,
+                rolesummary.HasNextPage,
+                rolesummary.HasPreviousPage
             };
 
-            return Ok(posummaryResult);
+            return Ok(rolesummaryResult);
         }
     }
 }

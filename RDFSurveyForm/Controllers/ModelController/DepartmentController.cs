@@ -43,19 +43,9 @@ namespace RDFSurveyForm.Controllers.ModelController
         }
 
 
-        [HttpDelete("DeleteDepartment/{Id:int}")]
-        public async Task<IActionResult> DeleteDepartment([FromRoute] int Id)
-        {
-            var dept = await _unitOfWork.Department.DeleteDepartment(Id);
-            if (dept == false)
-            {
-                return BadRequest("ID does not exist");
-            }
-            return Ok("Deleted!");
+        
 
-        }
-
-        [HttpPut("SetInActive/{Id:int}")]
+        [HttpPatch("SetInActive/{Id:int}")]
         public async Task<IActionResult> SetInActive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.Department.SetInActive(Id);
@@ -74,22 +64,22 @@ namespace RDFSurveyForm.Controllers.ModelController
         [Route("CustomerListPagnation")]
         public async Task<ActionResult<IEnumerable<GetDepartmentDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
-            var posummary = await _unitOfWork.Department.CustomerListPagnation(userParams, status, search);
+            var deptsummary = await _unitOfWork.Department.CustomerListPagnation(userParams, status, search);
 
-            Response.AddPaginationHeader(posummary.CurrentPage, posummary.PageSize, posummary.TotalCount, posummary.TotalPages, posummary.HasNextPage, posummary.HasPreviousPage);
+            Response.AddPaginationHeader(deptsummary.CurrentPage, deptsummary.PageSize, deptsummary.TotalCount, deptsummary.TotalPages, deptsummary.HasNextPage, deptsummary.HasPreviousPage);
 
-            var posummaryResult = new
+            var deptsummaryResult = new
             {
-                posummary,
-                posummary.CurrentPage,
-                posummary.PageSize,
-                posummary.TotalCount,
-                posummary.TotalPages,
-                posummary.HasNextPage,
-                posummary.HasPreviousPage
+                deptsummary,
+                deptsummary.CurrentPage,
+                deptsummary.PageSize,
+                deptsummary.TotalCount,
+                deptsummary.TotalPages,
+                deptsummary.HasNextPage,
+                deptsummary.HasPreviousPage
             };
 
-            return Ok(posummaryResult);
+            return Ok(deptsummaryResult);
         }
     }
 }

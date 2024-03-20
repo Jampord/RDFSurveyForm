@@ -47,17 +47,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
         
 
-        public async Task<bool> DeleteDepartment(int Id)
-        {
-            var deletedept = await _context.Department.FirstOrDefaultAsync(info => info.Id == Id);
-            if (deletedept != null)
-            {
-                _context.Remove(deletedept);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        
 
         public async Task<bool> SetInActive(int Id)
         {

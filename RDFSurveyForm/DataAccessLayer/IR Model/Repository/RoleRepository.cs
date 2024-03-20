@@ -69,17 +69,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
         
 
-        public async Task<bool> DeleteRole(int Id)
-        {
-            var deleterole = await _context.CRole.FirstOrDefaultAsync(info => info.Id == Id);
-            if (deleterole != null)
-            {
-                _context.Remove(deleterole);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            return false;
-        }
+        
 
         public async Task<bool> SetInActive(int Id)
         {

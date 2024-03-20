@@ -9,8 +9,6 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> UserNameAlreadyExist(string username);
         Task<bool> AddNewUser(AddNewUserDto user);
         Task<bool> UpdateUser(UpdateUserDto user);
-        //Task<bool> DeleteUserVerification(int Id);
-        Task<bool> DeleteUser(int Id);
         Task<PagedList<GetUserDto>> CustomerListPagnation(UserParams userParams, bool? status, string search);
         Task<bool> SetInActive(int Id);
         Task<bool> WrongPassword(ChangePasswordDto users);

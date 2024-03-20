@@ -86,31 +86,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         }
 
 
-        //public async Task<bool> DeleteUserVerification(int Id)
-        //{
-        //    var userId = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
-        //    if (userId.RoleId == 1) 
-        //    {
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }            
-        //}
-        public async Task<bool> DeleteUser(int Id)
-        {
-            
-            var deleteuser = await _context.Customer.FirstOrDefaultAsync(info => info.Id == Id);
-            
-                if (deleteuser != null)
-                {
-                    _context.Remove(deleteuser);
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
-                return false;
-        }
+        
+        
 
         
         public async Task<PagedList<GetUserDto>> CustomerListPagnation(UserParams userParams, bool ? status, string search)

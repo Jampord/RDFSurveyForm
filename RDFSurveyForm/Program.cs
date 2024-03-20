@@ -45,6 +45,7 @@ builder.Services.AddAuthentication(authOptions =>
         };
     });
 
+const string ClientPermission = "_clientPermission";
 
 builder.Services.AddCors(options =>
 {
