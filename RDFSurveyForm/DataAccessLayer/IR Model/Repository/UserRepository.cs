@@ -104,6 +104,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 RoleId = x.RoleId,
                 DepartmentId = x.DepartmentId,
                 EditedBy = x.EditedBy,
+                RoleName = x.Role.RoleName,
+                
 
             });
 

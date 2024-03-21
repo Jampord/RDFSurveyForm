@@ -49,7 +49,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 {
                     CategoryName = items.CategoryName,
                     CategoryPercentage = items.CategoryPercentage,
-                    Limit = 100,
+                    Limit = items.Limit,
                     SurveyGeneratorId = newGenerator.Id,
                    
                 };
@@ -72,17 +72,58 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search)
         {
-            var users = _context.GroupSurvey.Select(x => new GetGroupSurveyDto
+            var totalScore = _context.SurveyScores
+            .GroupBy(x => new
             {
+                SurveyGeneratorId = x.SurveyGeneratorId,
+                Id = x.Id,
+                Score = x.Score,
+                Limit = x.Limit,
 
-                SurveyGeneratorId = x.SurveyGeneratorId,       
-                BranchName = x.Groups.Branch.BranchName,
-                IsActive = x.IsActive, 
-                CreatedBy = x.CreatedBy,
-                CreatedAt = x.CreatedAt,
-                GroupName = x.Groups.GroupName,                                                              
-                IsTransacted = x.IsTransacted,
+
+            }).Select(x => new ScoreDto
+            {
+                SurveyGeneratorId = x.Key.SurveyGeneratorId,
+                Id = x.Key.Id,
+                Score = x.Key.Score / x.Key.Limit
             });
+
+
+            var categoryPercentage = _context.SurveyScores
+              .GroupJoin(totalScore, total => total.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (total, percentage) => new { total, percentage })
+              .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.total, percentage })
+              .GroupBy(x => new
+              {
+                  x.total.SurveyGeneratorId,
+                  x.total.Id,
+                  x.total.Score,
+                  x.total.CategoryPercentage
+
+              }).Select(x => new ScoreDto
+              {
+                  SurveyGeneratorId = x.Key.SurveyGeneratorId,
+                  Id = x.Key.Id,
+                  Score = x.Key.Score * x.Key.CategoryPercentage
+
+              });
+
+
+            var users = _context.GroupSurvey
+                .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId , percentage => percentage.SurveyGeneratorId,(score,percentage) => new {score,percentage })
+                .SelectMany(x => x.percentage.DefaultIfEmpty(), (x,percentage) => new {x.score , percentage })
+                .GroupBy(x => x.score.GroupsId)
+                .Select(x => new GetGroupSurveyDto
+                {
+
+                SurveyGeneratorId = x.Key,       
+                BranchName = x.First().score.Groups.Branch.BranchName,
+                IsActive = x.First().score.IsActive, 
+                CreatedBy = x.First().score.CreatedBy,
+                CreatedAt = x.First().score .CreatedAt,
+                GroupName = x.First().score.Groups.GroupName,                                                              
+                IsTransacted = x.First().score.IsTransacted,
+                FinalScore = x.Sum(x => x.percentage.Score)
+                });
 
             if (status != null)
             {
@@ -112,7 +153,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                         CategoryPercentage = x.CategoryPercentage * 100,
                         Score = x.Score,
                         Limit = x.Limit,
-                        SurveyPercentage = x.Score == null ? (x.Score * 0.01M) + x.CategoryPercentage : 0,
+                        SurveyPercentage =  (x.Score / x.Limit) * x.CategoryPercentage,
 
                     }).ToList()
 
@@ -123,34 +164,49 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> ScoreLimit(UpdateSurveyScoreDto limit)
         {
-            var limits = limit.Score;
-            var scoreLimit = await _context.SurveyScores.AnyAsync(x => x.Score ==  limit.Score);
-            if(limits > 100)
+            
+            foreach (var items in limit.UpdateSurveyScores)
             {
-                return false;
+                
+                var limits = items.Score;
+                var scoreLimit = await _context.SurveyScores.AnyAsync(x => x.Score == items.Score);
+                if (limits > 100 || limits < 0)
+                {
+                    return false;
+                }
+                
             }
             return true;
         }
-        //public async Task<bool> UpdateScore(UpdateSurveyScoreDto score)
-        //{
-        //    var transacted = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == score.SurveyGeneratorId);
 
 
-        //    var categoryList = await _context.Category.ToListAsync();
-        //    foreach (var items in categoryList)
-        //    {
-        //        if (updateScore != null)
-        //        {
-        //            updateScore.UpdatedBy = score.UpdatedBy;
-        //            updateScore.UpdatedAt = score.UpdatedAt;
-        //            transacted.IsTransacted = true;
-        //        }
+        public async Task<bool> UpdateScore(UpdateSurveyScoreDto score)
+        {
+            
+            var updateScore = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == score.SurveyGeneratorId);
+           
 
-        //    };
-        //    await _context.SaveChangesAsync();
+            foreach (var items in score.UpdateSurveyScores)
+            {
+                var scores = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == items.Id);
+                if (scores != null)
+                {
+                    
+                    scores.Score = items.Score;
+                    scores.UpdatedBy = score.UpdatedBy;
+                    scores.UpdatedAt = score.UpdatedAt;
+                    updateScore.UpdatedBy = score.UpdatedBy;
+                    updateScore.UpdatedAt = score.UpdatedAt;
+                    updateScore.IsTransacted = true;
+                    
+                }
+                
 
-        //    return true;
+            }
+            await _context.SaveChangesAsync();
 
-        //}
+            return true;
+
+        }
     }
 }

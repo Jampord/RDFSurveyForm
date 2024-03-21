@@ -27,9 +27,14 @@ namespace RDFSurveyForm.Controllers.SetupController
         public async Task<IActionResult> AddBranch(AddBranchDto branch)
         {
             var branchExist = await _unitOfWork.Branches.BranchAlreadyExist(branch.BranchName);
+            var codeExist = await _unitOfWork.Branches.BranchCodeExist(branch.BranchCode);
             if(branchExist == false)
             {
                 return BadRequest("Branch Name Already Exist!");
+            }
+            if(codeExist == false)
+            {
+                return BadRequest("Branch Code Already Exist!");
             }
             await _unitOfWork.Branches.AddBranch(branch);
             return Ok("Branch Added!");

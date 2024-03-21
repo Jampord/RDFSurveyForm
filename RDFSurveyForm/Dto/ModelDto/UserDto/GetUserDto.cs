@@ -11,6 +11,7 @@
         public bool InActive { get; set; }
         public string EditedBy { get; set; }
         public int? DepartmentId { get; set; }
+        public string RoleName { get; set; }
 
     }
 }

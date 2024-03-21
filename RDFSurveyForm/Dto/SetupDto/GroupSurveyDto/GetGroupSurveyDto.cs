@@ -5,6 +5,7 @@ namespace RDFSurveyForm.Dto.SetupDto.GroupSurveyDto
     public class GetGroupSurveyDto
     {
         public int? SurveyGeneratorId { get; set; }
+       
         public string BranchName { get; set; }
         public string GroupName { get; set; }       
         public bool IsTransacted { get; set; }

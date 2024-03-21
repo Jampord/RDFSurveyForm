@@ -7,8 +7,8 @@ namespace RDFSurveyForm.Model.Setup
         public int Id { get; set; }
         public string CategoryName { get; set; }
         public decimal CategoryPercentage { get; set; }
-        public int Score { get; set; }
-        public int Limit { get; set; }
+        public decimal Score { get; set; }
+        public decimal Limit { get; set; }
         public int? SurveyGeneratorId { get; set; }
  
         public virtual SurveyGenerator SurveyGenerator { get; set; }

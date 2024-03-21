@@ -28,6 +28,16 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return true;
         }
 
+        public async Task<bool> BranchCodeExist(string branchCode)
+        {
+            var codeAlreadyExist = await _context.Branches.AnyAsync(x => x.BranchCode == branchCode);
+            if(codeAlreadyExist)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<bool> AddBranch(AddBranchDto branch)
         {
             var addBranch = new Branch

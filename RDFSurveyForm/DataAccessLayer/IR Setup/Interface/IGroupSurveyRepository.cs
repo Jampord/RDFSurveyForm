@@ -10,7 +10,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Interface
         Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search);
         Task<IReadOnlyList<ViewSurveyDto>> ViewSurvey(int ? id);
         Task<bool> ScoreLimit(UpdateSurveyScoreDto limit);
-        //Task<bool> UpdateScore(UpdateSurveyScoreDto score);
+        Task<bool> UpdateScore(UpdateSurveyScoreDto score);
         //Task<IEnumerable<GetSurveyGeneratorIdDto>> ViewSurveyGeneratorId(int Id);
     }
 }

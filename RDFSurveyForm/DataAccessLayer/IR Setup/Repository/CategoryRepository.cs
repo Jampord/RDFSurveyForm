@@ -35,10 +35,12 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> PercentageChecker(AddCategoryDto category)
         {
-
-            var percentage = category.CategoryPercentage * .01M;
             var users = await _context.Category.ToListAsync();
-
+            var percentage = category.CategoryPercentage * .01M;
+            if (category.IsActive == true)
+            {
+                 users = await _context.Category.ToListAsync();
+            }
             var result = users.Sum(x => x.CategoryPercentage);
             var total = result + percentage;
             if (total > 1)
@@ -56,6 +58,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 CategoryPercentage = category.CategoryPercentage * .01M,
                 CreatedAt = DateTime.Now,
                 CreatedBy = category.CreatedBy,
+                Limit = category.Limit,
+
             };
             await _context.Category.AddAsync(addCategory);
             await _context.SaveChangesAsync();
@@ -72,6 +76,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 updateCategory.CategoryPercentage = category.CategoryPercentage * .01M;
                 updateCategory.UpdatedAt = DateTime.Now;
                 updateCategory.UpdatedBy = category.UpdatedBy;
+                updateCategory.Limit = category.Limit;
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -115,6 +120,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         public async Task<bool> SetInactive(int Id)
         {
             var setInactive = await _context.Category.FirstOrDefaultAsync(x => x.Id == Id);
+           
             if(setInactive != null)
             {
                 setInactive.IsActive = !setInactive.IsActive;

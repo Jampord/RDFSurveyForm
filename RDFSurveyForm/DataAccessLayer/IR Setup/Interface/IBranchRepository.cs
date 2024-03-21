@@ -6,6 +6,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Interface
     public interface IBranchRepository
     {
         Task<bool> BranchAlreadyExist(string branchName);
+        Task<bool> BranchCodeExist(string branchCode);
         Task<bool> AddBranch(AddBranchDto branch);
         Task<bool> UpdateBranch(UpdateBranchDto bran);
         Task<PagedList<GetBranchDto>> BranchListPagnation(UserParams userParams, bool? status, string search);

@@ -32,22 +32,22 @@ namespace RDFSurveyForm.Controllers.SetupController
 
 
 
-                var groupexist = await _unitofWork.GroupSurvey.GroupIdDoesnotExist(survey.GroupsId);
-                if (groupexist == false)
-                {
+            var groupexist = await _unitofWork.GroupSurvey.GroupIdDoesnotExist(survey.GroupsId);
+            if (groupexist == false)
+            {
                     return BadRequest("Group Id does not exist!");
-                }
+            }
 
-                var addgroupSurvey = await _unitofWork.GroupSurvey.AddSurvey(survey);
-                if (addgroupSurvey == false)
-                {
+            var addgroupSurvey = await _unitofWork.GroupSurvey.AddSurvey(survey);
+            if (addgroupSurvey == false)
+            {
                     return BadRequest("Error!");
-                }
+            }
 
             //await _unitofWork.GroupSurvey.AddSurvey(survey);  
 
 
-             await _unitofWork.CompleteAsync();
+           await _unitofWork.CompleteAsync();
 
             return Ok("Survey Added");
         }
@@ -83,25 +83,30 @@ namespace RDFSurveyForm.Controllers.SetupController
         }
 
         [HttpPut("UpdateScore/{surveyGeneratorId:int}")]
-
         public async Task<IActionResult> UpdateScore([FromBody] UpdateSurveyScoreDto score, [FromRoute] int surveyGeneratorId)
-        {
-            score.SurveyGeneratorId = surveyGeneratorId;
-            var limit = await _unitofWork.GroupSurvey.ScoreLimit(score);
-            
+        {        
+                score.SurveyGeneratorId = surveyGeneratorId;
+                var limit = await _unitofWork.GroupSurvey.ScoreLimit(score);
 
-            var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
 
-            if(limit == false)
+                var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
+
+                if (limit == false)
+                {
+                    return BadRequest("Invalid Score!");
+                }
+                if (surveyscore == null)
+                {
+                    return BadRequest("ID does not exist!");
+                }
+            var scores = await _unitofWork.GroupSurvey.UpdateScore(score);
+            if (scores == false)
             {
-                return BadRequest("Score exceeded the limit!");
+                return BadRequest("Error!");
             }
-            if(surveyscore == null)
-            {
-                return BadRequest("ID does not exist!");
-            }
-            
+
             return Ok("Score Added Successfuly!");
+
         }
     }
 }
