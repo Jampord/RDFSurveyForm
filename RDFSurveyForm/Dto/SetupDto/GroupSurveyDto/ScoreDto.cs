@@ -11,6 +11,7 @@
             public decimal Limit { get; set; }
             public decimal CategoryPercentage { get; set; }
             public decimal SurveyPercentage { get; set; }
+            public decimal ActualScore { get; set; }
         
     }
 }

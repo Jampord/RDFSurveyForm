@@ -28,6 +28,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             }
             return true;
         }
+        
 
         public async Task<bool> UserNameAlreadyExist(string username)
         {

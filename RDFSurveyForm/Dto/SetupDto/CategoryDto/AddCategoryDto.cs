@@ -8,6 +8,6 @@
         public decimal Limit { get; set; }
         public DateTime CreatedAt { get; set; }
         public string CreatedBy { get; set; }
-        public bool IsActive { get; set; }
+
     }
 }

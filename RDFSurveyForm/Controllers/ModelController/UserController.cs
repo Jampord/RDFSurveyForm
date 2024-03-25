@@ -31,7 +31,14 @@ namespace RDFSurveyForm.Controllers.ModelController
             var fname = await _unitOfWork.Customer.UserAlreadyExist(user.FullName);
             var uname = await _unitOfWork.Customer.UserNameAlreadyExist(user.UserName);
 
-
+            if (string.IsNullOrEmpty(user.FullName))
+            {
+                return BadRequest("Enter FullName");
+            }
+            if (string.IsNullOrEmpty(user.UserName))
+            {
+                return BadRequest("Enter UserName");
+            }
             if (fname == false)
             {
                 return BadRequest("User Already Exist");
@@ -40,6 +47,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             {
                 return BadRequest("Username Already Exist");
             }
+
 
             await _unitOfWork.Customer.AddNewUser(user);
 
@@ -56,6 +64,14 @@ namespace RDFSurveyForm.Controllers.ModelController
 
             var existingUser = await _context.Customer.FirstOrDefaultAsync(x => x.Id == user.Id);
 
+            if (string.IsNullOrEmpty(user.FullName))
+            {
+                return BadRequest("Enter FullName");
+            }
+            if (string.IsNullOrEmpty(user.UserName))
+            {
+                return BadRequest("Enter UserName");
+            }
             if (fname == false && user.FullName != existingUser.FullName)
             {
                 return BadRequest("Name already Exist!");
@@ -81,8 +97,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             user.Id = Id;
 
 
-            var notExist = await _context.Customer.FirstOrDefaultAsync(x => x.Id == user.Id);
-
+            var notExist = await _context.Customer.FirstOrDefaultAsync(x => x.Id == user.Id);           
             if (notExist == null)
             {
                 return BadRequest("id not exist");

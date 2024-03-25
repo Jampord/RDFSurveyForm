@@ -11,6 +11,7 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> SetInActive(int Id);
         Task<PagedList<GetRoleDto>> CustomerListPagnation(UserParams userParams, bool? status, string search);
         Task<bool> UpdatedPermission(UpdateRoleDto role);
+        Task<bool> IsActiveValidation(int Id);
 
     }
 }

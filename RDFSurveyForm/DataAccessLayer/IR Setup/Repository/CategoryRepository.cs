@@ -35,12 +35,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> PercentageChecker(AddCategoryDto category)
         {
-            var users = await _context.Category.ToListAsync();
+            var users = await _context.Category.Where(x => x.IsActive).ToListAsync();
             var percentage = category.CategoryPercentage * .01M;
-            if (category.IsActive == true)
-            {
-                 users = await _context.Category.ToListAsync();
-            }
             var result = users.Sum(x => x.CategoryPercentage);
             var total = result + percentage;
             if (total > 1)

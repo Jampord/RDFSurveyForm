@@ -39,7 +39,6 @@ namespace RDFSurveyForm.Data
     //Select* from Branches
     //Select* from Groups
     //Select* from Category
-    //Select* from Question
 
     //Select* from GroupSurvey
     //Select* from SurveyGenerator

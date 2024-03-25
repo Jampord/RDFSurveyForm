@@ -40,7 +40,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
             await _context.GroupSurvey.AddAsync(addGroupId);
 
-            var categoryList = await _context.Category.ToListAsync();
+            var categoryList = await _context.Category.Where(x => x.IsActive).ToListAsync();
 
              foreach (var items in categoryList)
              {
@@ -79,50 +79,47 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 Id = x.Id,
                 Score = x.Score,
                 Limit = x.Limit,
-
-
             }).Select(x => new ScoreDto
             {
                 SurveyGeneratorId = x.Key.SurveyGeneratorId,
                 Id = x.Key.Id,
-                Score = x.Key.Score / x.Key.Limit
+                Score = x.Key.Score / x.Key.Limit,
+                Limit = x.Key.Limit,
+                ActualScore = x.Key.Score
             });
 
 
             var categoryPercentage = _context.SurveyScores
-              .GroupJoin(totalScore, total => total.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (total, percentage) => new { total, percentage })
+              .GroupJoin(totalScore, total => total.Id, percentage => percentage.Id, (total, percentage) => new { total, percentage })
               .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.total, percentage })
               .GroupBy(x => new
               {
                   x.total.SurveyGeneratorId,
                   x.total.Id,
-                  x.total.Score,
-                  x.total.CategoryPercentage
-
+                  x.total.CategoryPercentage,
               }).Select(x => new ScoreDto
               {
                   SurveyGeneratorId = x.Key.SurveyGeneratorId,
                   Id = x.Key.Id,
-                  Score = x.Key.Score * x.Key.CategoryPercentage
-
+                  Score = x.Sum(x => x.percentage.Score) * x.Key.CategoryPercentage,
+                  CategoryPercentage = x.Key.CategoryPercentage,
               });
 
 
             var users = _context.GroupSurvey
-                .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId , percentage => percentage.SurveyGeneratorId,(score,percentage) => new {score,percentage })
-                .SelectMany(x => x.percentage.DefaultIfEmpty(), (x,percentage) => new {x.score , percentage })
+                .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
+                .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.score, percentage })
                 .GroupBy(x => x.score.GroupsId)
                 .Select(x => new GetGroupSurveyDto
                 {
-
-                SurveyGeneratorId = x.Key,       
-                BranchName = x.First().score.Groups.Branch.BranchName,
-                IsActive = x.First().score.IsActive, 
-                CreatedBy = x.First().score.CreatedBy,
-                CreatedAt = x.First().score .CreatedAt,
-                GroupName = x.First().score.Groups.GroupName,                                                              
-                IsTransacted = x.First().score.IsTransacted,
-                FinalScore = x.Sum(x => x.percentage.Score)
+                    SurveyGeneratorId = x.Key,
+                    BranchName = x.First().score.Groups.Branch.BranchName,
+                    IsActive = x.First().score.IsActive,
+                    CreatedBy = x.First().score.CreatedBy,
+                    CreatedAt = x.First().score.CreatedAt,
+                    GroupName = x.First().score.Groups.GroupName,
+                    IsTransacted = x.First().score.IsTransacted,
+                    FinalScore = x.Sum(x => x.percentage.Score) * 100
                 });
 
             if (status != null)
@@ -138,6 +135,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 );
             }
 
+            users = users.OrderByDescending(x => x.FinalScore);
+
             return await PagedList<GetGroupSurveyDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
@@ -149,6 +148,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                     SurveyGeneratorId = x.Key,
                     Categories = x.Select(x => new ViewSurveyDto.Category
                     {
+                        Id = x.Id,
                         CategoryName = x.CategoryName,
                         CategoryPercentage = x.CategoryPercentage * 100,
                         Score = x.Score,
@@ -167,10 +167,11 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             
             foreach (var items in limit.UpdateSurveyScores)
             {
-                
+                var lim = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == items.Id);
                 var limits = items.Score;
-                var scoreLimit = await _context.SurveyScores.AnyAsync(x => x.Score == items.Score);
-                if (limits > 100 || limits < 0)
+
+                
+                if (limits > lim.Limit || limits < 0)
                 {
                     return false;
                 }
@@ -190,18 +191,14 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             {
                 var scores = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == items.Id);
                 if (scores != null)
-                {
-                    
+                {                    
                     scores.Score = items.Score;
                     scores.UpdatedBy = score.UpdatedBy;
                     scores.UpdatedAt = score.UpdatedAt;
                     updateScore.UpdatedBy = score.UpdatedBy;
                     updateScore.UpdatedAt = score.UpdatedAt;
-                    updateScore.IsTransacted = true;
-                    
+                    updateScore.IsTransacted = true;                    
                 }
-                
-
             }
             await _context.SaveChangesAsync();
 
