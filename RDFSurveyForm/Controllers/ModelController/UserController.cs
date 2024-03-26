@@ -96,18 +96,23 @@ namespace RDFSurveyForm.Controllers.ModelController
         {
             user.Id = Id;
 
-
-            var notExist = await _context.Customer.FirstOrDefaultAsync(x => x.Id == user.Id);           
+            
+            var notExist = await _context.Customer.FirstOrDefaultAsync(x => x.Id == user.Id);
             if (notExist == null)
             {
                 return BadRequest("id not exist");
             }
-
             if (notExist.Password != user.Password)
             {
                 return BadRequest("Wrong password");
             }
 
+            var passwordCheck = await _unitOfWork.Customer.PasswordCheck(user);
+            if (passwordCheck == false)
+            {
+                return BadRequest("Password already Changed");
+            }
+           
             if (notExist.Password == user.NewPassword)
             {
                 return BadRequest("Password is the same as old Password");
@@ -115,18 +120,14 @@ namespace RDFSurveyForm.Controllers.ModelController
 
             if (user.NewPassword != user.ConfirmPassword)
             {
-                return BadRequest("Confirmation error");
+                return BadRequest("Password Confirmation error");
             }
 
-
-            await _unitOfWork.Customer.WrongPassword(user);
+            await _unitOfWork.Customer.UpdatePassword(user);
+            //await _unitOfWork.Customer.WrongPassword(user);
             await _unitOfWork.CompleteAsync();
 
             return Ok("Password Updated!");
-
-
-
-
         }
 
 
@@ -158,13 +159,23 @@ namespace RDFSurveyForm.Controllers.ModelController
         public async Task<IActionResult> SetInActive([FromRoute] int Id)
         {
             var setinactive = await _unitOfWork.Customer.SetInActive(Id);
-            if (setinactive == null)
+            if (setinactive == false)
             {
-                return BadRequest("Id does not exist");
+                return BadRequest("Id does not exist!");
             }
             return Ok("Updated");
         }
 
-        
+        [HttpPut("Resetpassword/{Id:int}")]
+        public async Task<IActionResult> ResetPassword([FromRoute]int Id)
+        {
+            var resetPassord = await _unitOfWork.Customer.ResetPassword(Id);
+            if(resetPassord == false)
+            {
+                return BadRequest("Id does not exist!");
+            }
+            return Ok("Password Reset");
+        }
+
     }
 }

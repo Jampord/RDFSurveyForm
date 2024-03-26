@@ -12,6 +12,7 @@
         public string EditedBy { get; set; }
         public int? DepartmentId { get; set; }
         public string RoleName { get; set; }
+        public string DepartmentName { get; set; }
 
     }
 }

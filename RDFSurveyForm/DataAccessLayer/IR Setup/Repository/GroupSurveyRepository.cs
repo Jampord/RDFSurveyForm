@@ -51,6 +51,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                     CategoryPercentage = items.CategoryPercentage,
                     Limit = items.Limit,
                     SurveyGeneratorId = newGenerator.Id,
+                    CreatedBy = items.CreatedBy,
                    
                 };
 

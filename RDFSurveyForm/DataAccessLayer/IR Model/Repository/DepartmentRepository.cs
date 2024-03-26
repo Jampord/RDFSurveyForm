@@ -59,8 +59,19 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             return false;
         }
 
-        
 
+
+        public async Task<bool> IsActiveValidation(int Id)
+        {
+            var userList = await _context.Customer.Where(x => x.InActive == true).ToListAsync();
+            var validation = userList.FirstOrDefault(x => x.DepartmentId == Id);
+            if(validation == null)
+            {
+                return false;
+            }
+            return true;
+                
+        }
         
 
         public async Task<bool> SetInActive(int Id)

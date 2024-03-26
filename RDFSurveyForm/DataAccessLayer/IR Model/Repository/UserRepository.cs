@@ -103,9 +103,11 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 CreatedAt = DateTime.Now,
                 InActive = x.InActive,
                 RoleId = x.RoleId,
-                DepartmentId = x.DepartmentId,
-                EditedBy = x.EditedBy,
                 RoleName = x.Role.RoleName,
+                DepartmentId = x.DepartmentId,
+                DepartmentName = x.Department.DepartmentName,
+                EditedBy = x.EditedBy,
+                
                 
 
             });
@@ -136,15 +138,16 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             return false;
         }
 
-        public async Task<bool> WrongPassword(ChangePasswordDto users)
+        
+        public async Task<bool> PasswordCheck(ChangePasswordDto users)
         {
-            var password = await _context.Customer.FirstOrDefaultAsync(u => u.Id == users.Id);
-
-            password.Password = users.NewPassword;
-
-            return true;
+            var password = await _context.Customer.FirstOrDefaultAsync(x => x.Id == users.Id);
+            if(users.Password == password.UserName)
+            {
+                return true;
+            }
+            return false;
         }
-
 
 
 
@@ -153,7 +156,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             var updatepassword = await _context.Customer.FirstOrDefaultAsync(u => u.Id == user.Id);
             if (updatepassword != null)
             {
-                updatepassword.Password = user.Password;
+                updatepassword.Password = user.NewPassword;
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -162,5 +165,16 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             return false;
         }
 
+        public async Task<bool> ResetPassword(int Id)
+        {
+            var resetPassword = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
+            if(resetPassword != null)
+            {
+                resetPassword.Password = resetPassword.UserName;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

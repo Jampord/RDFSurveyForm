@@ -10,6 +10,6 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> UpdateDepartment(UpdateDepartmentDto department);
         Task<bool> SetInActive(int Id);
         Task<PagedList<GetDepartmentDto>> CustomerListPagnation(UserParams userParams, bool ? status, string search);
-
+        Task<bool> IsActiveValidation(int Id);
     }
 }

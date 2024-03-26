@@ -11,8 +11,10 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> UpdateUser(UpdateUserDto user);
         Task<PagedList<GetUserDto>> CustomerListPagnation(UserParams userParams, bool? status, string search);
         Task<bool> SetInActive(int Id);
-        Task<bool> WrongPassword(ChangePasswordDto users);
+        Task<bool> PasswordCheck(ChangePasswordDto users);
         Task<bool> UpdatePassword(ChangePasswordDto user);
+        Task<bool> ResetPassword(int Id);
+
 
 
     }

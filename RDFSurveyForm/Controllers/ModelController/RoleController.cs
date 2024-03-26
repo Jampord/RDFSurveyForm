@@ -65,9 +65,9 @@ namespace RDFSurveyForm.Controllers.ModelController
         public async Task<IActionResult> SetInActive([FromRoute] int Id)
         {
             var inactiveValidation = await _unitOfWork.CRole.IsActiveValidation(Id);
-            if(inactiveValidation == true)
+            if (inactiveValidation == true)
             {
-                return BadRequest("Cannot Deactivate Role");
+                return BadRequest("Cannot Deavtivate Role");
             }
             var setinactive = await _unitOfWork.CRole.SetInActive(Id);
             if (setinactive == null)
