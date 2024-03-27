@@ -16,8 +16,6 @@ namespace RDFSurveyForm.Services
         ICategoryRepository Category { get; }
 
         IGroupSurveyRepository GroupSurvey { get; }
-        ISurveyScoreRepository SurveyScores { get; }
-        IGeneratorRepository Generator { get; }
 
         Task CompleteAsync();
 

@@ -155,11 +155,11 @@ namespace RDFSurveyForm.Controllers.ModelController
             return Ok(usersummaryResult);
         }
 
-        [HttpPatch("SetInActive/{Id:int}")]
-        public async Task<IActionResult> SetInActive([FromRoute] int Id)
+        [HttpPatch("SetIsActive/{Id:int}")]
+        public async Task<IActionResult> SetIsActive([FromRoute] int Id)
         {
-            var setinactive = await _unitOfWork.Customer.SetInActive(Id);
-            if (setinactive == false)
+            var setisactive = await _unitOfWork.Customer.SetIsActive(Id);
+            if (setisactive == false)
             {
                 return BadRequest("Id does not exist!");
             }

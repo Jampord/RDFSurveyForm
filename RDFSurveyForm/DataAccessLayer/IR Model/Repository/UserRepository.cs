@@ -126,12 +126,12 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             return await PagedList<GetUserDto>.CreateAsync(result, userParams.PageNumber, userParams.PageSize);
         }
 
-        public async Task<bool> SetInActive(int Id)
+        public async Task<bool> SetIsActive(int Id)
         {
-            var setInactive = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
-            if (setInactive != null)
+            var setIsactive = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
+            if (setIsactive != null)
             {
-                setInactive.IsActive = !setInactive.IsActive;
+                setIsactive.IsActive = !setIsactive.IsActive;
                 await _context.SaveChangesAsync();
                 return true;
             }

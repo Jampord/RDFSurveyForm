@@ -82,11 +82,11 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok(branchsummaryResult);
         }
 
-        [HttpPatch("SetInactive/{Id:int}")]
-        public async Task<IActionResult> SetInactive([FromRoute]int Id)
+        [HttpPatch("SetIsactive/{Id:int}")]
+        public async Task<IActionResult> SetIsactive([FromRoute]int Id)
         {
-            var setinactive = await _unitOfWork.Branches.SetInactive(Id);
-            if(setinactive == false)
+            var setisactive = await _unitOfWork.Branches.SetIsactive(Id);
+            if(setisactive == false)
             {
                 return BadRequest("Branch does not exist!");
             }

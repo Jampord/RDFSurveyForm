@@ -8,7 +8,7 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> RoleExist(string role);
         Task<bool> AddNewRole(AddRoleDto role);
         Task<bool> UpdateRole(UpdateRoleDto role);
-        Task<bool> SetInActive(int Id);
+        Task<bool> SetIsActive(int Id);
         Task<PagedList<GetRoleDto>> CustomerListPagnation(UserParams userParams, bool? status, string search);
         Task<bool> UpdatedPermission(UpdateRoleDto role);
         Task<bool> IsActiveValidation(int Id);

@@ -74,11 +74,11 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok(gcsummaryResult);
         }
 
-        [HttpPatch("Setinactive/{Id:int}")]
-        public async Task<IActionResult> SetInactive([FromRoute] int Id)
+        [HttpPatch("Setisactive/{Id:int}")]
+        public async Task<IActionResult> SetIsactive([FromRoute] int Id)
         {
-            var setinactive = await _unitOfWork.Groups.SetInactive(Id);
-            if(setinactive == false)
+            var setisactive = await _unitOfWork.Groups.SetIsactive(Id);
+            if(setisactive == false)
             {
                 return BadRequest("Group does not exist!");
             }

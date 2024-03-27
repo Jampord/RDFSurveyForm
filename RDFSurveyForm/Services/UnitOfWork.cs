@@ -19,10 +19,7 @@ namespace RDFSurveyForm.Services
         public ICategoryRepository Category { get; set;}
 
         public IGroupSurveyRepository GroupSurvey { get; }
-        public ISurveyScoreRepository SurveyScore { get; }
-        public IGeneratorRepository Generator { get; }
 
-        public ISurveyScoreRepository SurveyScores => throw new NotImplementedException();
 
         public UnitOfWork(StoreContext context)
         {
