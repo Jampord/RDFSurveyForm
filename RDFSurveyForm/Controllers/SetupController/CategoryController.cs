@@ -62,7 +62,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Update Successfuly!");
         }
 
-        [HttpGet("CategoryListPagnation")]
+        [HttpGet("CategoryListPagination")]
         public async Task<ActionResult<IEnumerable<GetCategoryDto>>> CategoryListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var categorysummary = await _unitOfWork.Category.CategoryPagnation(userParams, status, search);

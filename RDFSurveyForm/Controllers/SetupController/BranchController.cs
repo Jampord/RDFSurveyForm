@@ -61,7 +61,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Updated Successfuly!"); 
         }
 
-        [HttpGet("BranchListPagnation")]
+        [HttpGet("BranchListPagination")]
         public async Task<ActionResult<IEnumerable<GetBranchDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var branchsummary = await _unitOfWork.Branches.BranchListPagnation(userParams, status, search);

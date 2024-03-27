@@ -81,7 +81,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
         public async Task<bool> IsActiveValidation(int Id)
         {
-            var userList = await _context.Customer.Where(x => x.InActive == true).ToListAsync();
+            var userList = await _context.Customer.Where(x => x.IsActive == true).ToListAsync();
             var validation = userList.FirstOrDefault(x => x.RoleId == Id);
             if (validation == null)
             {

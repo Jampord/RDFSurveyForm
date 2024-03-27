@@ -134,7 +134,7 @@ namespace RDFSurveyForm.Controllers.ModelController
         
 
         [HttpGet]
-        [Route("CustomerListPagnation")]
+        [Route("CustomerListPagination")]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var usersummary = await _unitOfWork.Customer.CustomerListPagnation(userParams, status, search);

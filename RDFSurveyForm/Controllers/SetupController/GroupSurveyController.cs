@@ -53,7 +53,7 @@ namespace RDFSurveyForm.Controllers.SetupController
         }
 
         [HttpGet]
-        [Route("GroupSurveyPagnation")]
+        [Route("GroupSurveyPagination")]
         public async Task<ActionResult<IEnumerable<GetGroupSurveyDto>>> GroupSurveyPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var GSsummary = await _unitofWork.GroupSurvey.GroupSurveyPagination(userParams, status, search);

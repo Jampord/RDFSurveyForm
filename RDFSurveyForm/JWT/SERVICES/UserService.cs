@@ -27,7 +27,7 @@ namespace RDFSurveyForm.JWT.SERVICES
         {
             var user =  _context.Customer.Include(x=> x.Role).SingleOrDefault(x => x.UserName == request.UserName
                                                         && x.Password == request.Password
-                                                        && x.InActive != false);
+                                                        && x.IsActive != false);
             if (user == null)
                 return null;
 

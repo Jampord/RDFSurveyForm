@@ -101,7 +101,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 UserName = x.UserName,
                 CreatedBy = x.CreatedBy,
                 CreatedAt = DateTime.Now,
-                InActive = x.InActive,
+                InActive = x.IsActive,
                 RoleId = x.RoleId,
                 RoleName = x.Role.RoleName,
                 DepartmentId = x.DepartmentId,
@@ -131,7 +131,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             var setInactive = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
             if (setInactive != null)
             {
-                setInactive.InActive = !setInactive.InActive;
+                setInactive.IsActive = !setInactive.IsActive;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -157,20 +157,21 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             if (updatepassword != null)
             {
                 updatepassword.Password = user.NewPassword;
-
+                updatepassword.UpdatePass = true;
                 await _context.SaveChangesAsync();
                 return true;
 
             }
             return false;
         }
-
+        //haschange
         public async Task<bool> ResetPassword(int Id)
         {
             var resetPassword = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
             if(resetPassword != null)
             {
                 resetPassword.Password = resetPassword.UserName;
+                resetPassword.UpdatePass = false;
                 await _context.SaveChangesAsync();
                 return true;
             }

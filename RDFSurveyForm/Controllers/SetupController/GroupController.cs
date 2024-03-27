@@ -55,7 +55,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok("Update Successfuly!");
         }
 
-        [HttpGet("GroupListPagnation")]
+        [HttpGet("GroupListPagination")]
         public async Task<ActionResult<IEnumerable<GetGroupDto>>> GroupListPagnation([FromQuery] UserParams userParams, bool ? status, string search)
         {
             var gcsummary = await _unitOfWork.Groups.GroupListPagnation(userParams, status, search);
