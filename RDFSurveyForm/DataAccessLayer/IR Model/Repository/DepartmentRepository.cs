@@ -37,10 +37,11 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             {
                 DepartmentName = department.DepartmentName,
                 CreatedAt = DateTime.Now,
-
+                DepartmentNo = department.DepartmentNo,
+                StatusSync = "New Added"
             };
+
             await _context.Department.AddAsync(AddDept);
-            await _context.SaveChangesAsync();
 
 
             return true;
@@ -53,6 +54,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             {
                 updatedept.DepartmentName = department.DepartmentName;
                 updatedept.EditedBy = department.EditedBy;
+                updatedept.EditedAt = department.EditedAt;
+                updatedept.DepartmentNo = department.DepartmentNo;
                 await _context.SaveChangesAsync();
                 return true;
             };
@@ -115,6 +118,13 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
 
 
         }
+
+
+        public async Task<Department> GetByDepartmentNo(int? departmentNo)
+        {
+            return await _context.Department.FirstOrDefaultAsync(x => x.DepartmentNo == departmentNo);
+        }
+
 
     }
 }

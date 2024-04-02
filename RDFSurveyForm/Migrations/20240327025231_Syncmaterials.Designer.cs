@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDFSurveyForm.Data;
 
@@ -11,9 +12,11 @@ using RDFSurveyForm.Data;
 namespace RDFSurveyForm.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240327025231_Syncmaterials")]
+    partial class Syncmaterials
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace RDFSurveyForm.Migrations
 
                     b.Property<string>("DepartmentName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DepartmentNo")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("EditedAt")
                         .HasColumnType("datetime2");
