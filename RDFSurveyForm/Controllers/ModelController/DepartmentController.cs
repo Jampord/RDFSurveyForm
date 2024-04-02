@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RDFSurveyForm.Data;
 using RDFSurveyForm.DATA_ACCESS_LAYER.EXTENSIONS;
 using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.Dto.ModelDto.DepartmentDto;
+using RDFSurveyForm.Model;
 using RDFSurveyForm.Services;
 
 namespace RDFSurveyForm.Controllers.ModelController
@@ -60,7 +62,7 @@ namespace RDFSurveyForm.Controllers.ModelController
                 return BadRequest("Cannot Deavtivate Department");
             }
             var setisactive = await _unitOfWork.Department.SetIsActive(Id);
-            if (setisactive == null)
+            if (setisactive == false)
             {
                 return BadRequest("Id does not exist");
 
@@ -91,6 +93,92 @@ namespace RDFSurveyForm.Controllers.ModelController
             };
 
             return Ok(deptsummaryResult);
+        }
+
+        [HttpPut("SyncDepartment")]
+        public async Task<IActionResult> SyncDepartment([FromBody] AddDepartmentDto[] department)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new JsonResult("Something went wrong!") { StatusCode = 500 };
+            }
+
+            var duplicateList = new List<AddDepartmentDto>();
+            var availableImport = new List<AddDepartmentDto>();
+            var availableUpdate = new List<AddDepartmentDto>();
+            var departmentNameEmpty = new List<AddDepartmentDto>();
+
+
+            foreach (var items in department)
+            {
+                if (department.Count(x => x.DepartmentName == items.DepartmentName && x.Id == items.Id) > 1)
+                {
+                    duplicateList.Add(items);
+                }
+                if (items.DepartmentName == string.Empty || items.DepartmentName == null)
+                {
+                    departmentNameEmpty.Add(items);
+                    continue;
+                }
+
+                
+                else
+                {
+                    var existingDepartment = await _unitOfWork.Department.GetByDepartmentNo(items.DepartmentNo);
+                    if (existingDepartment != null)
+                    {
+                        bool hasChanged = false;
+
+                        if (existingDepartment.DepartmentName != items.DepartmentName)
+                        {
+                            existingDepartment.DepartmentName = items.DepartmentName;
+                            hasChanged = true;
+                        }
+
+                        if (hasChanged)
+                        {
+                            existingDepartment.IsActive = items.IsActive;
+                            existingDepartment.EditedBy = User.Identity.Name;
+                            existingDepartment.EditedAt = DateTime.Now;
+                            existingDepartment.StatusSync = "New Update";
+                            existingDepartment.SyncDate = DateTime.Now;
+
+                            availableUpdate.Add(items);
+                        }
+
+                        if (!hasChanged)
+                        {
+                            existingDepartment.SyncDate = DateTime.Now;
+                            existingDepartment.StatusSync = "No new update";
+                        }
+                    }
+                    else
+                    {
+                        items.StatusSync = "New Added";
+                        availableImport.Add(items);
+                        await _unitOfWork.Department.AddDepartment(items);
+                    }
+
+                }
+            }
+
+            var resultList = new
+            {
+                AvailableImport = availableImport,
+                AvailableUpdate = availableUpdate,
+                DuplicateList = duplicateList,
+                DepartmentNameEmpty = departmentNameEmpty,
+            };
+
+            if (duplicateList.Count == 0 && departmentNameEmpty.Count == 0 )
+            {
+                await _unitOfWork.CompleteAsync();
+                return Ok("Successfully updated and added!");
+            }
+            else
+            {
+                return BadRequest(resultList);
+            }
         }
     }
 }

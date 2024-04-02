@@ -1,5 +1,6 @@
 ﻿using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.Dto.ModelDto.DepartmentDto;
+using RDFSurveyForm.Model;
 
 namespace RDFSurveyForm.DataAccessLayer.Interface
 {
@@ -11,5 +12,6 @@ namespace RDFSurveyForm.DataAccessLayer.Interface
         Task<bool> SetIsActive(int Id);
         Task<PagedList<GetDepartmentDto>> CustomerListPagnation(UserParams userParams, bool ? status, string search);
         Task<bool> IsActiveValidation(int Id);
+        Task<Department> GetByDepartmentNo(int? departmentNo);
     }
 }
