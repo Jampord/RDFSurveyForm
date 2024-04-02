@@ -49,7 +49,7 @@ const string ClientPermission = "_clientPermission";
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("ClientPermission", policy =>
+    options.AddPolicy(name: ClientPermission, policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
@@ -64,6 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(ClientPermission);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
