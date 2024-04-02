@@ -61,16 +61,16 @@ namespace RDFSurveyForm.Controllers.ModelController
 
        
 
-        [HttpPatch("SetInActive/{Id:int}")]
-        public async Task<IActionResult> SetInActive([FromRoute] int Id)
+        [HttpPatch("SetIsActive/{Id:int}")]
+        public async Task<IActionResult> SetIsActive([FromRoute] int Id)
         {
-            var inactiveValidation = await _unitOfWork.CRole.IsActiveValidation(Id);
-            if (inactiveValidation == true)
+            var isactiveValidation = await _unitOfWork.CRole.IsActiveValidation(Id);
+            if (isactiveValidation == true)
             {
                 return BadRequest("Cannot Deavtivate Role");
             }
-            var setinactive = await _unitOfWork.CRole.SetInActive(Id);
-            if (setinactive == null)
+            var setisactive = await _unitOfWork.CRole.SetIsActive(Id);
+            if (setisactive == null)
             {
                 return BadRequest("Id does not exist");
 
@@ -82,7 +82,7 @@ namespace RDFSurveyForm.Controllers.ModelController
         }
 
         [HttpGet]
-        [Route("CustomerListPagination")]
+        [Route("RoleListPagination")]
         public async Task<ActionResult<IEnumerable<GetRoleDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var rolesummary = await _unitOfWork.CRole.CustomerListPagnation(userParams, status, search);

@@ -74,12 +74,12 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         }
         
 
-        public async Task<bool> SetInActive(int Id)
+        public async Task<bool> SetIsActive(int Id)
         {
-            var setInactive = await _context.Department.FirstOrDefaultAsync(x => x.Id == Id);
-            if (setInactive != null)
+            var setIsactive = await _context.Department.FirstOrDefaultAsync(x => x.Id == Id);
+            if (setIsactive != null)
             {
-                setInactive.IsActive = !setInactive.IsActive;
+                setIsactive.IsActive = !setIsactive.IsActive;
                 await _context.SaveChangesAsync();
                 return true;
             }

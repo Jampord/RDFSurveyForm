@@ -95,12 +95,12 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
        
 
-        public async Task<bool> SetInactive(int Id)
+        public async Task<bool> SetIsactive(int Id)
         {
-            var setInactive = await _context.Groups.FirstOrDefaultAsync(x => x.Id == Id);
-            if (setInactive != null)
+            var setIsactive = await _context.Groups.FirstOrDefaultAsync(x => x.Id == Id);
+            if (setIsactive != null)
             {
-                setInactive.IsActive = !setInactive.IsActive;
+                setIsactive.IsActive = !setIsactive.IsActive;
                 await _context.SaveChangesAsync();
                 return true;
             }
