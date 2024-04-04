@@ -7,6 +7,7 @@ using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.GroupSurveyDto;
 using RDFSurveyForm.Model;
+using RDFSurveyForm.Model.Setup;
 using RDFSurveyForm.Services;
 
 namespace RDFSurveyForm.Controllers.SetupController
@@ -29,9 +30,6 @@ namespace RDFSurveyForm.Controllers.SetupController
 
         public async Task<IActionResult> AddGroupSurvey(AddGroupSurveyDto survey)
         {
-
-
-
             var groupexist = await _unitofWork.GroupSurvey.GroupIdDoesnotExist(survey.GroupsId);
             if (groupexist == false)
             {
@@ -44,10 +42,7 @@ namespace RDFSurveyForm.Controllers.SetupController
                     return BadRequest("Error!");
             }
 
-            //await _unitofWork.GroupSurvey.AddSurvey(survey);  
-
-
-           await _unitofWork.CompleteAsync();
+            await _unitofWork.CompleteAsync();
 
             return Ok("Survey Added");
         }
@@ -84,31 +79,23 @@ namespace RDFSurveyForm.Controllers.SetupController
 
         [HttpPut("UpdateScore/{surveyGeneratorId:int}")]
         public async Task<IActionResult> UpdateScore([FromBody] UpdateSurveyScoreDto score, [FromRoute] int surveyGeneratorId)
-        {        
-                score.SurveyGeneratorId = surveyGeneratorId;
-                var limit = await _unitofWork.GroupSurvey.ScoreLimit(score);
-
-
-                var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
-
-                if (limit == false)
-                {
-                    return BadRequest("Invalid Score!");
-                }
-                if (surveyscore == null)
-                {
-                    return BadRequest("ID does not exist!");
-                }
+        {
+ 
+            var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
+            if (surveyscore == null)
+            {
+                return BadRequest("ID does not exist!");
+            }
             var scores = await _unitofWork.GroupSurvey.UpdateScore(score);
             if (scores == false)
             {
                 return BadRequest("Error!");
             }
 
-            return Ok("Score Added Successfuly!");
+            return Ok("Score Approved!");
 
         }
 
-        
+
     }
 }

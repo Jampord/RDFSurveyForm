@@ -56,7 +56,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Department");
+                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Role", b =>
@@ -84,7 +84,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CRole");
+                    b.ToTable("CRole", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Branch", b =>
@@ -118,7 +118,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Category", b =>
@@ -155,7 +155,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.GroupSurvey", b =>
@@ -196,7 +196,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasIndex("SurveyGeneratorId");
 
-                    b.ToTable("GroupSurvey");
+                    b.ToTable("GroupSurvey", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Groups", b =>
@@ -232,7 +232,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Groups");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.SurveyGenerator", b =>
@@ -248,7 +248,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SurveyGenerator");
+                    b.ToTable("SurveyGenerator", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.SurveyScore", b =>
@@ -293,7 +293,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasIndex("SurveyGeneratorId");
 
-                    b.ToTable("SurveyScores");
+                    b.ToTable("SurveyScores", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.User", b =>
@@ -340,7 +340,7 @@ namespace RDFSurveyForm.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.GroupSurvey", b =>

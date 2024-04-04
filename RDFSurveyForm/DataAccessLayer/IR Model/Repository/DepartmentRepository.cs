@@ -41,7 +41,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 StatusSync = "New Added"
             };
 
-            await _context.Department.AddAsync(AddDept);
+            await _context.Department.AddAsync(AddDept);         
 
 
             return true;

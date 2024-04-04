@@ -14,7 +14,7 @@ namespace RDFSurveyForm.Controllers.ModelController
     public class DepartmentController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly StoreContext _context;
+
 
         public DepartmentController(IUnitOfWork unitOfWork)
         {
@@ -32,6 +32,7 @@ namespace RDFSurveyForm.Controllers.ModelController
                 return BadRequest("Department Name already exist!");
             }
             await _unitOfWork.Department.AddDepartment(department);
+            await _unitOfWork.CompleteAsync();
 
             return Ok("Success");
         }

@@ -32,16 +32,16 @@ namespace RDFSurveyForm.Data
     }
 
 
-//    Select* from Customer
-//Select* from CRole
-//Select* from Department
+    //Select* from Customer
+    //Select* from CRole
+    //Select* from Department
 
-//Select* from Branches
-//Select* from Groups
-//Select* from Category
+    //Select* from Branches
+    //Select* from Groups
+    //Select* from Category
 
-//Select* from GroupSurvey
-//Select* from SurveyGenerator
-//Select* from SurveyScores
+    //Select* from GroupSurvey
+    //Select* from SurveyGenerator
+    //Select* from SurveyScores
 
 }
