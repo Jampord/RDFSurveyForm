@@ -102,7 +102,17 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await PagedList<GetBranchDto>.CreateAsync(result, userParams.PageNumber, userParams.PageSize);
         }
 
-        
+        public async Task<bool> IsActiveValidation(int Id)
+        {
+            var userList = await _context.Groups.Where(x => x.IsActive == true).ToListAsync();
+            var validation = userList.FirstOrDefault(x => x.BranchId == Id);
+            if (validation == null)
+            {
+                return false;
+            };
+            return true;
+
+        }
 
         public async Task<bool> SetIsactive(int Id)
         {

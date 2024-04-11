@@ -17,11 +17,6 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             _context = context;
         }
 
-        //public async Task<bool> EnteredNull(string none)
-        //{
-        //    var entered = await _context.Department.FirstOrDefaultAsync();
-
-        //}
         public async Task<bool> ExistingDepartment(string department)
         {
             var existingDepartment = await _context.Department.FirstOrDefaultAsync(x => x.DepartmentName == department);
@@ -123,6 +118,36 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         public async Task<Department> GetByDepartmentNo(int? departmentNo)
         {
             return await _context.Department.FirstOrDefaultAsync(x => x.DepartmentNo == departmentNo);
+        }
+
+        public async Task<bool> SyncDeleteCheck(List<AddDepartmentDto> department)
+        {
+            bool counter = false;
+            var deletedDept = await _context.Department.ToListAsync();
+            foreach (var deptDelete in deletedDept)
+
+            {
+                
+                foreach (var listDept in department)
+                {
+                    if (listDept.DepartmentNo == deptDelete.DepartmentNo)
+                    {
+                        counter = true;
+                    }
+
+                }
+
+                if (counter == false)
+                {
+                    _context.Remove(deptDelete);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                counter = false;
+
+            }
+            return false;
+
         }
 
 

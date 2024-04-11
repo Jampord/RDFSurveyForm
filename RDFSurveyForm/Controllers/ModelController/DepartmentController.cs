@@ -6,6 +6,7 @@ using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
 using RDFSurveyForm.Dto.ModelDto.DepartmentDto;
 using RDFSurveyForm.Model;
 using RDFSurveyForm.Services;
+using System.Linq;
 
 namespace RDFSurveyForm.Controllers.ModelController
 {
@@ -14,11 +15,13 @@ namespace RDFSurveyForm.Controllers.ModelController
     public class DepartmentController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly StoreContext _context;
 
 
-        public DepartmentController(IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork, StoreContext context)
         {
             _unitOfWork = unitOfWork;
+            _context = context;
 
         }
         [HttpPost]
@@ -46,7 +49,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             var dept = await _unitOfWork.Department.UpdateDepartment(department);
             if (dept == false)
             {
-                return BadRequest("User does not exist");
+                return BadRequest("Department does not exist");
             }
             return Ok("Success");
         }
@@ -108,8 +111,9 @@ namespace RDFSurveyForm.Controllers.ModelController
             var availableImport = new List<AddDepartmentDto>();
             var availableUpdate = new List<AddDepartmentDto>();
             var departmentNameEmpty = new List<AddDepartmentDto>();
+            var deleteDepartment = new List<AddDepartmentDto>();
 
-
+            
             foreach (var items in department)
             {
                 if (department.Count(x => x.DepartmentName == items.DepartmentName && x.Id == items.Id) > 1)
@@ -121,8 +125,9 @@ namespace RDFSurveyForm.Controllers.ModelController
                     departmentNameEmpty.Add(items);
                     continue;
                 }
-
                 
+
+
                 else
                 {
                     var existingDepartment = await _unitOfWork.Department.GetByDepartmentNo(items.DepartmentNo);
@@ -160,8 +165,27 @@ namespace RDFSurveyForm.Controllers.ModelController
                         await _unitOfWork.Department.AddDepartment(items);
                     }
 
+                    deleteDepartment.Add(items);
                 }
+
+ 
+
             }
+
+            //var alldepartment = deleteDepartment.Where(x => x.DepartmentNo != null).ToList();
+
+            var departmentlist = deleteDepartment.Select(x => x.DepartmentNo);
+
+            var alldepartmentdelete = await _context.Department.ToListAsync();
+
+            var differnce = alldepartmentdelete.Where(x => !departmentlist.Contains(x.DepartmentNo)).ToList();
+
+            foreach (var dept in differnce)
+            {
+                _context.Remove(dept);
+            }
+
+            //var syncDelete = await _unitOfWork.Department.SyncDeleteCheck(deleteDepartment);
 
             var resultList = new
             {
