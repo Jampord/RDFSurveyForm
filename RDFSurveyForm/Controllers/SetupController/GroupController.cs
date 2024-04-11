@@ -76,12 +76,7 @@ namespace RDFSurveyForm.Controllers.SetupController
 
         [HttpPatch("Setisactive/{Id:int}")]
         public async Task<IActionResult> SetIsactive([FromRoute] int Id)
-        {
-            var isactiveValidation = await _unitOfWork.CRole.IsActiveValidation(Id);
-            if (isactiveValidation == true)
-            {
-                return BadRequest("Cannot Deavtivate Role");
-            }
+        {           
             var setisactive = await _unitOfWork.Groups.SetIsactive(Id);
             if(setisactive == false)
             {

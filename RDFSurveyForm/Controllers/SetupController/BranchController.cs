@@ -88,7 +88,7 @@ namespace RDFSurveyForm.Controllers.SetupController
             var isactiveValidation = await _unitOfWork.Branches.IsActiveValidation(Id);
             if (isactiveValidation == true)
             {
-                return BadRequest("Cannot Deavtivate Department");
+                return BadRequest("Cannot Deavtivate Branch");
             }
             var setisactive = await _unitOfWork.Branches.SetIsactive(Id);
             if(setisactive == false)
