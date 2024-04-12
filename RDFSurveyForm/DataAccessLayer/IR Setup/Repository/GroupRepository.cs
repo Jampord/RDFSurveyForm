@@ -94,7 +94,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         }
 
        
-
+        
         public async Task<bool> SetIsactive(int Id)
         {
             var setIsactive = await _context.Groups.FirstOrDefaultAsync(x => x.Id == Id);

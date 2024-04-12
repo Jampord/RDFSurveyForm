@@ -2,6 +2,8 @@
 using RDFSurveyForm.DataAccessLayer.Interface;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.DataAccessLayer.IR_Setup.Repository;
+using RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Interface;
+using RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Repository;
 using RDFSurveyForm.DataAccessLayer.Repository;
 
 
@@ -19,6 +21,8 @@ namespace RDFSurveyForm.Services
         public ICategoryRepository Category { get; set;}
 
         public IGroupSurveyRepository GroupSurvey { get; }
+        public IUnitRepository Unit { get; set; }
+        public ISubunitRepository Subunit { get; set; }
 
 
         public UnitOfWork(StoreContext context)
@@ -37,13 +41,12 @@ namespace RDFSurveyForm.Services
 
             Category = new CategoryRepository(_context);
 
-            //Question = new QuestionsRepository(_context);
-
             GroupSurvey = new GroupSurveyRepository(_context);
 
-            //SurveyScores = new SurveyScoreRepository(_context);
+            //Unit = new UnitRepository(_context);
 
-            //Generator = new GeneratorRepository(_context);
+            //Subunit = new SubunitRepository(_context);
+
         }
 
         public async Task CompleteAsync()

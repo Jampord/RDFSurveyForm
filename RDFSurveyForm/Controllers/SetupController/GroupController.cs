@@ -76,7 +76,7 @@ namespace RDFSurveyForm.Controllers.SetupController
 
         [HttpPatch("Setisactive/{Id:int}")]
         public async Task<IActionResult> SetIsactive([FromRoute] int Id)
-        {
+        {           
             var setisactive = await _unitOfWork.Groups.SetIsactive(Id);
             if(setisactive == false)
             {

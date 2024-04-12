@@ -7,6 +7,8 @@ using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
 using RDFSurveyForm.Dto.SetupDto.GroupSurveyDto;
 using RDFSurveyForm.Model.Setup;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Reflection.Emit;
 
 
@@ -23,8 +25,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
 
         public async Task<bool> AddSurvey(AddGroupSurveyDto survey)
-        {
-            var newGenerator = new SurveyGenerator { };
+        {          
+                var newGenerator = new SurveyGenerator { };
             await _context.SurveyGenerator.AddAsync(newGenerator);
             await _context.SaveChangesAsync();
 
@@ -37,28 +39,62 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 SurveyGeneratorId = newGenerator.Id,
 
             };
-
             await _context.GroupSurvey.AddAsync(addGroupId);
 
-            var categoryList = await _context.Category.Where(x => x.IsActive).ToListAsync();
 
-             foreach (var items in categoryList)
-             {
+            var categoryList = await _context.Category.Where(x => x.IsActive).ToListAsync();
+            
+            foreach (var itemss in categoryList)
+            {
+
+                
+
 
                 var addSurveyScore = new SurveyScore
-                {
-                    CategoryName = items.CategoryName,
-                    CategoryPercentage = items.CategoryPercentage,
-                    Limit = items.Limit,
-                    SurveyGeneratorId = newGenerator.Id,
-                    CreatedBy = items.CreatedBy,
-                   
-                };
+                    {
+                        CategoryName = itemss.CategoryName,
+                        CategoryPercentage = itemss.CategoryPercentage,
+                        Limit = itemss.Limit,
+                        SurveyGeneratorId = newGenerator.Id,
+                        CreatedBy = itemss.CreatedBy,
 
+                    };
                 await _context.SurveyScores.AddAsync(addSurveyScore);
+                await _context.SaveChangesAsync();
+
+ 
+
             }
 
+            foreach (var item in survey.UpdateSurveyScores)
+            {
+
+
+                var scorelist = await _context.SurveyScores.Where(x => x.SurveyGeneratorId == newGenerator.Id).ToListAsync();
+                foreach (var scorel in scorelist)
+                {
+
+                    var scores = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == scorel.Id);
+
+                    if (scores.Score == 0)
+                    {
+                        if (scores != null)
+                        {
+                            scores.Score = item.Score;
+
+                            break;
+                        }
+
+                    }
+
+                }
+
+
+            }
+            await _context.SaveChangesAsync();
+
             return true;
+
         }
 
         public async Task<bool> GroupIdDoesnotExist(int? Id)
@@ -163,7 +199,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await results;
         }
 
-        public async Task<bool> ScoreLimit(UpdateSurveyScoreDto limit)
+        public async Task<bool> ScoreLimit(AddGroupSurveyDto limit)
         {
             
             foreach (var items in limit.UpdateSurveyScores)
@@ -184,21 +220,19 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> UpdateScore(UpdateSurveyScoreDto score)
         {
-            
+            var scorelist = await _context.SurveyScores.Where(x => x.SurveyGeneratorId == score.SurveyGeneratorId).ToListAsync();
             var updateScore = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == score.SurveyGeneratorId);
-           
-
-            foreach (var items in score.UpdateSurveyScores)
+            foreach (var items in scorelist)
             {
+
                 var scores = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == items.Id);
                 if (scores != null)
-                {                    
-                    scores.Score = items.Score;
+                {
                     scores.UpdatedBy = score.UpdatedBy;
                     scores.UpdatedAt = score.UpdatedAt;
                     updateScore.UpdatedBy = score.UpdatedBy;
                     updateScore.UpdatedAt = score.UpdatedAt;
-                    updateScore.IsTransacted = true;                    
+                    updateScore.IsTransacted = true;
                 }
             }
             await _context.SaveChangesAsync();

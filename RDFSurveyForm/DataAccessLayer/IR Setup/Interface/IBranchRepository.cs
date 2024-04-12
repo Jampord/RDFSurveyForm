@@ -10,8 +10,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Interface
         Task<bool> AddBranch(AddBranchDto branch);
         Task<bool> UpdateBranch(UpdateBranchDto bran);
         Task<PagedList<GetBranchDto>> BranchListPagnation(UserParams userParams, bool? status, string search);
-
         Task<bool> SetIsactive(int Id);
+        Task<bool> IsActiveValidation(int Id);
 
     }
 }

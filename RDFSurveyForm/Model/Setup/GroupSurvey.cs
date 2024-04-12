@@ -9,9 +9,9 @@
         public virtual SurveyGenerator SurveyGenerator { get; set; }
         public bool IsActive { get; set; } = true;
         public string CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string UpdatedBy { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; } 
         public bool IsTransacted { get; set; }
 
 

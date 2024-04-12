@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using RDFSurveyForm.Model;
 using RDFSurveyForm.Model.Setup;
+using RDFSurveyForm.Model.Unit_SubUnit;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
@@ -22,7 +23,9 @@ namespace RDFSurveyForm.Data
         public virtual DbSet<GroupSurvey> GroupSurvey { get; set; }
         public virtual DbSet<SurveyGenerator> SurveyGenerator { get; set; }
         public virtual DbSet<SurveyScore> SurveyScores { get; set; }
-
+        public virtual DbSet<Unit> Units { get; set; }
+        public virtual DbSet<Subunit> Subunits { get; set; }
+        
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,16 +35,19 @@ namespace RDFSurveyForm.Data
     }
 
 
-//    Select* from Customer
-//Select* from CRole
-//Select* from Department
+    //Select* from Customer
+    //Select* from CRole
+    //Select* from Department
 
-//Select* from Branches
-//Select* from Groups
-//Select* from Category
+    //Select* from Branches
+    //Select* from Groups
+    //Select* from Category
 
-//Select* from GroupSurvey
-//Select* from SurveyGenerator
-//Select* from SurveyScores
+    //Select* from GroupSurvey
+    //Select* from SurveyGenerator
+    //Select* from SurveyScores
+
+    //Select* from Units
+    //Select* from Subunits
 
 }
