@@ -32,7 +32,7 @@ namespace RDFSurveyForm.Controllers.ModelController
                 return BadRequest("Department Name already exist!");
             }
             await _unitOfWork.Department.AddDepartment(department);
-
+            await _unitOfWork.CompleteAsync();
             return Ok("Success");
         }
 

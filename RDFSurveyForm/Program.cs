@@ -66,10 +66,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(ClientPermission);
-<<<<<<< HEAD
-=======
 
->>>>>>> ee9c973b852a612e9242aa44589dc990c83683f1
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
