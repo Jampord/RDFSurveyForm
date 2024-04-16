@@ -10,6 +10,8 @@
         public string EditedBy { get; set; }
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<Department> Departments { get; set; }
-        public DateTime? EditedAt { get; set; } 
+        public DateTime? EditedAt { get; set; }
+        public int? UnitId { get; set; }
+        public virtual Unit Unit { get; set; }
     }
 }

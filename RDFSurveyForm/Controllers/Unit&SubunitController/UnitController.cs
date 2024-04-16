@@ -42,7 +42,7 @@ namespace RDFSurveyForm.Controllers.Unit_SubunitController
 
         [HttpPut("UpdateUnit/{Id:int}")]
 
-        public async Task<IActionResult> UpdateDepartment([FromBody] UpdateUnitDto unit, [FromRoute] int Id)
+        public async Task<IActionResult> UpdateUnit([FromBody] UpdateUnitDto unit, [FromRoute] int Id)
         {
             unit.Id = Id;
 
@@ -73,8 +73,8 @@ namespace RDFSurveyForm.Controllers.Unit_SubunitController
         }
 
         [HttpGet]
-        [Route("DepartmentListPagination")]
-        public async Task<ActionResult<IEnumerable<GetUnitDto>>> CustomerListPagnation([FromQuery] UserParams userParams, bool? status, string search)
+        [Route("UnitListPagination")]
+        public async Task<ActionResult<IEnumerable<GetUnitDto>>> UnitListPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
             var unitsummary = await _unitOfWork.Unit.UnitListPagination(userParams, status, search);
 

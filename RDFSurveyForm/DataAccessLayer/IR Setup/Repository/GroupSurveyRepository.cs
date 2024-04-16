@@ -113,7 +113,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             .GroupBy(x => new
             {
                 SurveyGeneratorId = x.SurveyGeneratorId,
-                Id = x.Id,
+                Id = x.Id,    
                 Score = x.Score,
                 Limit = x.Limit,
             }).Select(x => new ScoreDto
@@ -142,39 +142,39 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                   CategoryPercentage = x.Key.CategoryPercentage,
               });
 
+                var users = _context.GroupSurvey
+                    .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
+                    .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.score, percentage })
+                    .GroupBy(x => x.score.GroupsId)
+                    .Select(x => new GetGroupSurveyDto
+                    {
+                        SurveyGeneratorId = x.Key,
+                        BranchName = x.First().score.Groups.Branch.BranchName,
+                        IsActive = x.First().score.IsActive,
+                        CreatedBy = x.First().score.CreatedBy,
+                        CreatedAt = x.First().score.CreatedAt,
+                        GroupName = x.First().score.Groups.GroupName,
+                        IsTransacted = x.First().score.IsTransacted,
+                        FinalScore = x.Sum(x => x.percentage.Score) * 100
+                    });
 
-            var users = _context.GroupSurvey
-                .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
-                .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.score, percentage })
-                .GroupBy(x => x.score.GroupsId)
-                .Select(x => new GetGroupSurveyDto
+                if (status != null)
                 {
-                    SurveyGeneratorId = x.Key,
-                    BranchName = x.First().score.Groups.Branch.BranchName,
-                    IsActive = x.First().score.IsActive,
-                    CreatedBy = x.First().score.CreatedBy,
-                    CreatedAt = x.First().score.CreatedAt,
-                    GroupName = x.First().score.Groups.GroupName,
-                    IsTransacted = x.First().score.IsTransacted,
-                    FinalScore = x.Sum(x => x.percentage.Score) * 100
-                });
+                    users = users.Where(x => x.IsActive == status);
+                }
 
-            if (status != null)
-            {
-                users = users.Where(x => x.IsActive == status);
-            }
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users.Where(x => x.SurveyGeneratorId.ToString().Contains(search)
+                    || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower())
+                    || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
+                    );
+                }
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                users = users.Where(x => x.SurveyGeneratorId.ToString().Contains(search)
-                || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower())
-                || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
-                );
-            }
+                users = users.OrderByDescending(x => x.FinalScore);
 
-            users = users.OrderByDescending(x => x.FinalScore);
-
-            return await PagedList<GetGroupSurveyDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+                return await PagedList<GetGroupSurveyDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+            
         }
 
         public async Task<IReadOnlyList<ViewSurveyDto>> ViewSurvey(int? id)

@@ -13,6 +13,6 @@
         public virtual Branch Branch { get; set; }
 
         public ICollection<GroupSurvey> GroupSurvey { get; set; }
-        //public ICollection<SurveyScore> SurveyScore { get; set; }
+        public ICollection<User> User { get; set; }
     }
 }

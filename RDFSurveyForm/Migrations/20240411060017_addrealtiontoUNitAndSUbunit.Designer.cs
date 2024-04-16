@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RDFSurveyForm.Data;
 
@@ -11,9 +12,11 @@ using RDFSurveyForm.Data;
 namespace RDFSurveyForm.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20240411060017_addrealtiontoUNitAndSUbunit")]
+    partial class addrealtiontoUNitAndSUbunit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -408,9 +411,6 @@ namespace RDFSurveyForm.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("GroupsId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -435,8 +435,6 @@ namespace RDFSurveyForm.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("GroupsId");
 
                     b.HasIndex("RoleId");
 
@@ -510,10 +508,6 @@ namespace RDFSurveyForm.Migrations
                         .WithMany("Users")
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("RDFSurveyForm.Model.Setup.Groups", "Groups")
-                        .WithMany("User")
-                        .HasForeignKey("GroupsId");
-
                     b.HasOne("RDFSurveyForm.Model.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId");
@@ -527,8 +521,6 @@ namespace RDFSurveyForm.Migrations
                         .HasForeignKey("UnitId");
 
                     b.Navigation("Department");
-
-                    b.Navigation("Groups");
 
                     b.Navigation("Role");
 
@@ -555,8 +547,6 @@ namespace RDFSurveyForm.Migrations
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.Groups", b =>
                 {
                     b.Navigation("GroupSurvey");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RDFSurveyForm.Model.Setup.SurveyGenerator", b =>
