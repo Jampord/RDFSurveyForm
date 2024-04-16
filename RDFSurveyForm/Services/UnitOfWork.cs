@@ -43,9 +43,9 @@ namespace RDFSurveyForm.Services
 
             GroupSurvey = new GroupSurveyRepository(_context);
 
-            //Unit = new UnitRepository(_context);
+            Unit = new UnitRepository(_context);
 
-            //Subunit = new SubunitRepository(_context);
+            Subunit = new SubunitRepository(_context);
 
         }
 

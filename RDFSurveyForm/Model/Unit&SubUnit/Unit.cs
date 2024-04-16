@@ -11,5 +11,6 @@
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<Department> Departments { get; set; }
         public DateTime? EditedAt { get; set; } 
+        public virtual ICollection<Subunit> Subunits { get; set; }
     }
 }

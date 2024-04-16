@@ -1,4 +1,5 @@
-﻿using RDFSurveyForm.Model.Unit_SubUnit;
+﻿using RDFSurveyForm.Model.Setup;
+using RDFSurveyForm.Model.Unit_SubUnit;
 
 namespace RDFSurveyForm.Model
 {
@@ -22,6 +23,8 @@ namespace RDFSurveyForm.Model
         public int? SubunitId { get; set; }
         public virtual Unit Unit { get; set; }
         public virtual Subunit Subunit { get; set; }
+        public int? GroupsId { get; set; }
+        public virtual Groups Groups { get; set; }
 
     }
 }

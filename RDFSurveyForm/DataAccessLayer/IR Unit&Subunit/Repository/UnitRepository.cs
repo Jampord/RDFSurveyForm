@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RDFSurveyForm.Data;
 using RDFSurveyForm.DATA_ACCESS_LAYER.HELPERS;
+using RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Interface;
 using RDFSurveyForm.Dto.ModelDto.DepartmentDto;
 using RDFSurveyForm.Dto.Unit_SubUnitDto;
 using RDFSurveyForm.Model;
@@ -8,7 +9,7 @@ using RDFSurveyForm.Model.Unit_SubUnit;
 
 namespace RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Repository
 {
-    public class UnitRepository
+    public class UnitRepository : IUnitRepository
     {
         private readonly StoreContext _context;
 
@@ -31,6 +32,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Repository
             var addunit = new Unit
             {
                 UnitName = unit.UnitName,
+                CreatedBy = unit.CreatedBy,
                 CreatedAt = DateTime.Now,
             };
 
@@ -60,6 +62,15 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Unit_Subunit.Repository
             var setIsactive = await _context.Units.FirstOrDefaultAsync(x => x.Id == Id);
             if (setIsactive != null)
             {
+                
+                var subunitactive = await _context.Subunits.Where(x => x.UnitId==Id).ToListAsync();
+                var subunitIsactive = subunitactive.Where(x => x.IsActive).ToList();
+                foreach (var subunit in subunitIsactive)
+                {
+                    subunit.IsActive = !subunit.IsActive;
+                }
+                    
+                
                 setIsactive.IsActive = !setIsactive.IsActive;
                 await _context.SaveChangesAsync();
                 return true;

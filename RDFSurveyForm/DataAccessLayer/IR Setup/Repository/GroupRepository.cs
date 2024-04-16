@@ -33,11 +33,11 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         {
             var addGroup = new Groups
             {
-                
-                GroupName = group.GroupName,    
+
+                GroupName = group.GroupName,
                 BranchId = group.BranchId,
                 CreatedAt = DateTime.Now,
-                CreatedBy = group.CreatedBy, 
+                CreatedBy = group.CreatedBy,
             };
             await _context.Groups.AddAsync(addGroup);
             await _context.SaveChangesAsync();
@@ -48,7 +48,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
         public async Task<bool> UpdateGroup(UpdateGroupDto group)
         {
 
-            var updateGroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == group.Id); 
+            var updateGroup = await _context.Groups.FirstOrDefaultAsync(x => x.Id == group.Id);
             if (updateGroup != null)
             {
                 updateGroup.GroupName = group.GroupName;
@@ -64,37 +64,44 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<PagedList<GetGroupDto>> GroupListPagnation(UserParams userParams, bool? status, string search)
         {
-            var users = _context.Groups.Select(x => new GetGroupDto
-            {
-                Id = x.Id,
-                GroupName = x.GroupName,
-                CreatedAt = x.CreatedAt,
-                CreatedBy = x.CreatedBy,
-                IsActive = x.IsActive,
-                UpdatedAt = x.UpdatedAt,
-                UpdatedBy = x.UpdatedBy,
-                BranchId = x.BranchId,
-                BranchName = x.Branch.BranchName,
 
-            });
+           
 
-            if (status != null)
-            {
-                users = users.Where(x => x.IsActive == status);
-            }
+                var users = _context.Groups.Select(x => new GetGroupDto
+                {
+                    Id = x.Id,
+                    GroupName = x.GroupName,
+                    CreatedAt = x.CreatedAt,
+                    CreatedBy = x.CreatedBy,
+                    IsActive = x.IsActive,
+                    UpdatedAt = x.UpdatedAt,
+                    UpdatedBy = x.UpdatedBy,
+                    BranchId = x.BranchId,
+                    BranchName = x.Branch.BranchName,
 
-            if (!string.IsNullOrEmpty(search))
-            {
-                users = users.Where(x => Convert.ToString(x.Id).ToLower().Contains(search.Trim().ToLower())
-                || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
-                || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower()));
-            }
+                });
 
-            return await PagedList<GetGroupDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+
+                if (status != null)
+                {
+                    users = users.Where(x => x.IsActive == status);
+                }
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    users = users.Where(x => Convert.ToString(x.Id).ToLower().Contains(search.Trim().ToLower())
+                    || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
+                    || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower()));
+                }
+
+                return await PagedList<GetGroupDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
+            
+
+            
         }
 
-       
-        
+
+
         public async Task<bool> SetIsactive(int Id)
         {
             var setIsactive = await _context.Groups.FirstOrDefaultAsync(x => x.Id == Id);

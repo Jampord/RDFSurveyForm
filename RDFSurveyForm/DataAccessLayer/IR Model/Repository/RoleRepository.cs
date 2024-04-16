@@ -48,6 +48,11 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             var verification = role.Permission;
             var updatePermission = await _context.CRole.FirstOrDefaultAsync(x => x.Id == role.Id);
             var verify = updatePermission.Permission;
+
+            if (verify  == null)
+            {
+                return false;
+            }
             if (verify.Count >= verification.Count) 
             {
                 return true;

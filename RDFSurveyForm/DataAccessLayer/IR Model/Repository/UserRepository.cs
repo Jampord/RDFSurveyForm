@@ -50,7 +50,9 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             {
                 FullName = user.FullName,
                 UserName = user.UserName,
-                Password = user.Password,
+                //Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                Password = user.UserName,
+                GroupsId = user.GroupsId,
                 CreatedAt = DateTime.Now,
                 CreatedBy = user.CreatedBy,
                 RoleId = user.RoleId,
@@ -75,6 +77,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 updateuser.UserName = user.UserName;
                 updateuser.FullName = user.FullName;
                 updateuser.RoleId = user.RoleId;
+                updateuser.GroupsId = user.GroupsId;
                 updateuser.EditedBy = user.EditedBy;
                 updateuser.DepartmentId = user.DepartmentId;
 
@@ -87,7 +90,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         }
 
 
-        
+        // hashpassword 
+        //verify
         
 
         
@@ -104,6 +108,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
                 InActive = x.IsActive,
                 RoleId = x.RoleId,
                 RoleName = x.Role.RoleName,
+                GroupsId = x.GroupsId,
+                GroupName = x.Groups.GroupName,
                 DepartmentId = x.DepartmentId,
                 DepartmentName = x.Department.DepartmentName,
                 EditedBy = x.EditedBy,
@@ -154,6 +160,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         public async Task<bool> UpdatePassword(ChangePasswordDto user)
         {
             var updatepassword = await _context.Customer.FirstOrDefaultAsync(u => u.Id == user.Id);
+            //var verifypassword = await _context.Customer.FirstOrDefaultAsync(x => x.Password == BCrypt.Net.BCrypt.Verify(x.Password));
             if (updatepassword != null)
             {
                 updatepassword.Password = user.NewPassword;
