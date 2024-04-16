@@ -46,6 +46,19 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return true;
 
         }
+        public async Task<bool> PercentageCheckers(UpdateCategoryDto category)
+        {
+            var users = await _context.Category.Where(x => x.IsActive && x.Id != category.Id) .ToListAsync();
+            var percentage = category.CategoryPercentage * .01M;
+            var result = users.Sum(x => x.CategoryPercentage);
+            var total = result + percentage;
+            if (total > 1)
+            {
+                return false;
+            }
+            return true;
+
+        }
         public async Task<bool> AddCategory(AddCategoryDto category)
         {
             var addCategory = new Category
@@ -86,7 +99,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             {
                 Id = x.Id,
                 CategoryName = x.CategoryName,
-                CategoryPercentage = x.CategoryPercentage,
+                CategoryPercentage = x.CategoryPercentage * 100,
                 CreatedAt = x.CreatedAt,
                 CreatedBy = x.CreatedBy,
                 UpdatedAt = x.UpdatedAt,
@@ -111,15 +124,14 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return await PagedList<GetCategoryDto>.CreateAsync(category, userParams.PageNumber, userParams.PageSize);
         }
 
-        
 
-        public async Task<bool> SetIsactive(int Id)
+
+        public async Task<bool> DeleteCategory(int Id)
         {
-            var setIsactive = await _context.Category.FirstOrDefaultAsync(x => x.Id == Id);
-           
-            if(setIsactive != null)
+            var deleteCategory = await _context.Category.FirstOrDefaultAsync(info => info.Id == Id);
+            if (deleteCategory != null)
             {
-                setIsactive.IsActive = !setIsactive.IsActive;
+                _context.Remove(deleteCategory);
                 await _context.SaveChangesAsync();
                 return true;
             }

@@ -63,7 +63,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             var isactiveValidation = await _unitOfWork.Department.IsActiveValidation(Id);
             if (isactiveValidation == true)
             {
-                return BadRequest("Cannot Deavtivate Department");
+                return BadRequest("Cannot Deactivate Department");
             }
             var setisactive = await _unitOfWork.Department.SetIsActive(Id);
             if (setisactive == false)

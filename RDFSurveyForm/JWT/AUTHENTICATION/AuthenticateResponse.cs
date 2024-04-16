@@ -13,7 +13,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
         public int Id { get; set; }
         public string FullName { get; set; }
         public string UserName { get; set; }
-        public string Password { get; set; }
+        //public string Password { get; set; }
         public int? Role { get; set; }
         public string UserRoleName { get; set; }
         public string Token { get; set; }
@@ -26,7 +26,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
             Id = user.Id;
             FullName = user.FullName;
             UserName = user.UserName;
-            Password = user.Password;
+            //Password = user.Password;
             Role = user.RoleId;
             Token = token;
 
