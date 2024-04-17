@@ -16,6 +16,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
         //public string Password { get; set; }
         public int? Role { get; set; }
         public string UserRoleName { get; set; }
+        public ICollection<string> Permission {  get; set; }
         public string Token { get; set; }
 
 
@@ -28,6 +29,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
             UserName = user.UserName;
             //Password = user.Password;
             Role = user.RoleId;
+            Permission = user.Role.Permission;
             Token = token;
 
             var role = _context.Customer.Include(x => x.Role).FirstOrDefaultAsync(x => x.RoleId == Role);
