@@ -90,7 +90,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             var result = _context.Department.Select(x => new GetDepartmentDto
             {
                 Id = x.Id,
-                DepartmentName = x.DepartmentName,               
+                DepartmentName = x.DepartmentName,
+                DepartmentNo = x.DepartmentNo,
                 CreatedAt = DateTime.Now,
                 IsActive = x.IsActive,
                 EditedBy = x.EditedBy,

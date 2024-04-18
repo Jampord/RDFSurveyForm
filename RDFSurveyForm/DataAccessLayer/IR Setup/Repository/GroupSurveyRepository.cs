@@ -107,7 +107,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return false;
         }
 
-        public async Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search)
+        public async Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search/*, int Ids*/)
         {
             var totalScore = _context.SurveyScores
             .GroupBy(x => new
@@ -116,6 +116,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 Id = x.Id,    
                 Score = x.Score,
                 Limit = x.Limit,
+                //Ids = Ids,
             }).Select(x => new ScoreDto
             {
                 SurveyGeneratorId = x.Key.SurveyGeneratorId,
@@ -124,7 +125,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 Limit = x.Key.Limit,
                 ActualScore = x.Key.Score
             });
-
+             
 
             var categoryPercentage = _context.SurveyScores
               .GroupJoin(totalScore, total => total.Id, percentage => percentage.Id, (total, percentage) => new { total, percentage })
@@ -141,11 +142,13 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                   Score = x.Sum(x => x.percentage.Score) * x.Key.CategoryPercentage,
                   CategoryPercentage = x.Key.CategoryPercentage,
               });
+            //var groupId = _context.GroupSurvey.FirstOrDefaultAsync(x => x.GroupsId == Ids);
+
 
                 var users = _context.GroupSurvey
-                    .GroupJoin(categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
+                    .GroupJoin( categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
                     .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.score, percentage })
-                    .GroupBy(x => x.score.GroupsId)
+                    .GroupBy(x => x.score.GroupsId )
                     .Select(x => new GetGroupSurveyDto
                     {
                         SurveyGeneratorId = x.Key,

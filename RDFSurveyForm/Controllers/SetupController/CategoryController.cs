@@ -53,6 +53,11 @@ namespace RDFSurveyForm.Controllers.SetupController
 
 
             }
+            var categoryChecker = await _unitOfWork.Category.PercentageCheckers(category);
+            if (categoryChecker == false)
+            {
+                return BadRequest("% exceeded 100%");
+            }
 
             var categoryId = await _unitOfWork.Category.UdpateCategory(category);
             if (categoryId == false)
@@ -81,15 +86,15 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok(categorysummaryResult);
         }
 
-        [HttpPatch("Setisactive/{Id:int}")]
-        public async Task<IActionResult> SetIsactive([FromRoute] int Id)
+        [HttpDelete("DeleteCategory/{Id:int}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] int Id)
         {
-            var setisactive = await _unitOfWork.Category.SetIsactive(Id);
-            if (setisactive == false)
+            var deleteCategory = await _unitOfWork.Category.DeleteCategory(Id);
+            if (deleteCategory == false)
             {
                 return BadRequest("Category does not exist!");
             }
-            return Ok("Updated");
+            return Ok("Deleted");
         }
 
         

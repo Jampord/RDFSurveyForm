@@ -33,11 +33,11 @@ namespace RDFSurveyForm.Controllers.ModelController
 
             if (string.IsNullOrEmpty(user.FullName))
             {
-                return BadRequest("Enter FullName");
+                return BadRequest("Enter Full name");
             }
             if (string.IsNullOrEmpty(user.UserName))
             {
-                return BadRequest("Enter UserName");
+                return BadRequest("Enter Username");
             }
             if (fname == false)
             {
@@ -66,11 +66,11 @@ namespace RDFSurveyForm.Controllers.ModelController
 
             if (string.IsNullOrEmpty(user.FullName))
             {
-                return BadRequest("Enter FullName");
+                return BadRequest("Enter Full name");
             }
             if (string.IsNullOrEmpty(user.UserName))
             {
-                return BadRequest("Enter UserName");
+                return BadRequest("Enter Username");
             }
             if (fname == false && user.FullName != existingUser.FullName)
             {
@@ -79,7 +79,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             }
             if (uname == false && user.UserName != existingUser.UserName)
             {
-                return BadRequest("User Name already Exist!");
+                return BadRequest("Username already Exist!");
             }
 
             var users = await _unitOfWork.Customer.UpdateUser(user);
@@ -102,18 +102,15 @@ namespace RDFSurveyForm.Controllers.ModelController
             {
                 return BadRequest("id not exist");
             }
-            if (notExist.Password != user.Password)
+            if (!BCrypt.Net.BCrypt.Verify(user.Password, notExist.Password))
             {
                 return BadRequest("Wrong password");
             }
 
-            var passwordCheck = await _unitOfWork.Customer.PasswordCheck(user);
-            if (passwordCheck == false)
-            {
-                return BadRequest("Password already Changed");
-            }
+            //var passwordCheck = await _unitOfWork.Customer.PasswordCheck(user);
            
-            if (notExist.Password == user.NewPassword)
+            //if (notExist.Password == user.NewPassword)
+            if(BCrypt.Net.BCrypt.Verify(user.NewPassword , notExist.Password))
             {
                 return BadRequest("Password is the same as old Password");
             }

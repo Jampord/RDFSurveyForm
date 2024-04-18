@@ -67,7 +67,7 @@ namespace RDFSurveyForm.Controllers.ModelController
             var isactiveValidation = await _unitOfWork.CRole.IsActiveValidation(Id);
             if (isactiveValidation == true)
             {
-                return BadRequest("Cannot Deavtivate Role");
+                return BadRequest("Cannot Deactivate Role");
             }
             var setisactive = await _unitOfWork.CRole.SetIsActive(Id);
             if (setisactive == null)

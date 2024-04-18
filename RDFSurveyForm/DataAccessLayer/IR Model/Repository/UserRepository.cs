@@ -50,8 +50,8 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             {
                 FullName = user.FullName,
                 UserName = user.UserName,
-                //Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                Password = user.UserName,
+                Password = BCrypt.Net.BCrypt.HashPassword(user.UserName),
+                //Password = user.UserName,
                 GroupsId = user.GroupsId,
                 CreatedAt = DateTime.Now,
                 CreatedBy = user.CreatedBy,
@@ -160,10 +160,9 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
         public async Task<bool> UpdatePassword(ChangePasswordDto user)
         {
             var updatepassword = await _context.Customer.FirstOrDefaultAsync(u => u.Id == user.Id);
-            //var verifypassword = await _context.Customer.FirstOrDefaultAsync(x => x.Password == BCrypt.Net.BCrypt.Verify(x.Password));
             if (updatepassword != null)
             {
-                updatepassword.Password = user.NewPassword;
+                updatepassword.Password = BCrypt.Net.BCrypt.HashPassword(user.NewPassword);
                 updatepassword.UpdatePass = true;
                 await _context.SaveChangesAsync();
                 return true;
@@ -177,7 +176,7 @@ namespace RDFSurveyForm.DataAccessLayer.Repository
             var resetPassword = await _context.Customer.FirstOrDefaultAsync(x => x.Id == Id);
             if(resetPassword != null)
             {
-                resetPassword.Password = resetPassword.UserName;
+                resetPassword.Password = BCrypt.Net.BCrypt.HashPassword(resetPassword.UserName);
                 resetPassword.UpdatePass = false;
                 await _context.SaveChangesAsync();
                 return true;
