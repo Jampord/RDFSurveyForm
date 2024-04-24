@@ -6,6 +6,7 @@ using RDFSurveyForm.DataAccessLayer.IR_Setup.Interface;
 using RDFSurveyForm.Dto.ModelDto.UserDto;
 using RDFSurveyForm.Dto.SetupDto.GroupDto;
 using RDFSurveyForm.Dto.SetupDto.GroupSurveyDto;
+using RDFSurveyForm.Model;
 using RDFSurveyForm.Model.Setup;
 using System.Collections.Generic;
 using System.Drawing;
@@ -107,8 +108,9 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return false;
         }
 
-        public async Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search/*, int Ids*/)
+        public async Task<PagedList<GetGroupSurveyDto>> GroupSurveyPagination(UserParams userParams, bool? status, string search)
         {
+            //var departmentId = _context.SurveyScores.
             var totalScore = _context.SurveyScores
             .GroupBy(x => new
             {
@@ -116,7 +118,7 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 Id = x.Id,    
                 Score = x.Score,
                 Limit = x.Limit,
-                //Ids = Ids,
+                //Ids = Ids, 
             }).Select(x => new ScoreDto
             {
                 SurveyGeneratorId = x.Key.SurveyGeneratorId,
@@ -142,10 +144,29 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                   Score = x.Sum(x => x.percentage.Score) * x.Key.CategoryPercentage,
                   CategoryPercentage = x.Key.CategoryPercentage,
               });
-            //var groupId = _context.GroupSurvey.FirstOrDefaultAsync(x => x.GroupsId == Ids);
+            //var groupId = _context.GroupSurvey.FirstOrDefaultAsync(x => x.Groups.GroupName == Ids);
+            var num = 0;
+            int? userss = 0;
+            var counts = false;
+            var number = await _context.GroupSurvey.Where(x => x.GroupsId != 0 && x.IsActive == true).ToListAsync();
+            foreach (var group in number)
+            {
+                
+                
+                if (group.GroupsId != null  && counts == false) 
+                {
+                    userss = group.GroupsId;
+                    counts = true;
+                }
 
+                if(userss == group.GroupsId)
+                {
+                    num++;
+                }
 
-                var users = _context.GroupSurvey
+            }
+            
+            var users = _context.GroupSurvey
                     .GroupJoin( categoryPercentage, score => score.SurveyGeneratorId, percentage => percentage.SurveyGeneratorId, (score, percentage) => new { score, percentage })
                     .SelectMany(x => x.percentage.DefaultIfEmpty(), (x, percentage) => new { x.score, percentage })
                     .GroupBy(x => x.score.GroupsId )
@@ -158,10 +179,31 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                         CreatedAt = x.First().score.CreatedAt,
                         GroupName = x.First().score.Groups.GroupName,
                         IsTransacted = x.First().score.IsTransacted,
-                        FinalScore = x.Sum(x => x.percentage.Score) * 100
+                        FinalScore = (x.Sum(x => x.percentage.Score) * 100) / num
                     });
 
-                if (status != null)
+
+            //if (Ids != null)
+            //{
+
+
+                
+            //    //var groupid = await _context.GroupSurvey.Where(x => x.GroupsId  == users.);
+            //    int count =  userss.Count();
+            //    foreach (var items in userss)
+            //    { 
+
+
+            //        items.FinalScore = items.FinalScore ;
+            //        users =  users.Where(x => x.GroupName == items.GroupName);
+                    
+            //    }
+
+
+            //}
+
+
+            if (status != null)
                 {
                     users = users.Where(x => x.IsActive == status);
                 }
@@ -170,15 +212,14 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                 {
                     users = users.Where(x => x.SurveyGeneratorId.ToString().Contains(search)
                     || Convert.ToString(x.BranchName).ToLower().Contains(search.Trim().ToLower())
-                    || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower())
-                    );
+                    || Convert.ToString(x.GroupName).ToLower().Contains(search.Trim().ToLower()));
                 }
 
                 users = users.OrderByDescending(x => x.FinalScore);
 
                 return await PagedList<GetGroupSurveyDto>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
             
-        }
+             }
 
         public async Task<IReadOnlyList<ViewSurveyDto>> ViewSurvey(int? id)
         {
