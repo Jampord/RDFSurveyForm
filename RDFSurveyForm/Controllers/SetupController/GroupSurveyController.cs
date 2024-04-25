@@ -51,6 +51,7 @@ namespace RDFSurveyForm.Controllers.SetupController
         [Route("GroupSurveyPagination")]
         public async Task<ActionResult<IEnumerable<GetGroupSurveyDto>>> GroupSurveyPagnation([FromQuery] UserParams userParams, bool? status, string search)
         {
+            //List
             var GSsummary = await _unitofWork.GroupSurvey.GroupSurveyPagination(userParams, status, search);
 
             Response.AddPaginationHeader(GSsummary.CurrentPage, GSsummary.PageSize, GSsummary.TotalCount, GSsummary.TotalPages, GSsummary.HasNextPage, GSsummary.HasPreviousPage);

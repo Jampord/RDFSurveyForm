@@ -29,8 +29,10 @@ namespace RDFSurveyForm.JWT.SERVICES
             var user =  _context.Customer.Include(x=> x.Role).SingleOrDefault(x => x.UserName == request.UserName
                                                         && x.IsActive != false);
 
-            if (user == null && !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            {
                 return null;
+            }
 
             var token = generateJwtToken(user);
             return  new AuthenticateResponse(user, token, _context);
