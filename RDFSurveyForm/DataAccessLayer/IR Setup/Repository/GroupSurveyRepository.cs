@@ -144,7 +144,8 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
                   Score = x.Sum(x => x.percentage.Score) * x.Key.CategoryPercentage,
                   CategoryPercentage = x.Key.CategoryPercentage,
               });
-            //var groupId = _context.GroupSurvey.FirstOrDefaultAsync(x => x.Groups.GroupName == Ids);
+
+
             var num = 0;
             int? userss = 0;
             var counts = false;
@@ -264,20 +265,18 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
 
         public async Task<bool> UpdateScore(UpdateSurveyScoreDto score)
         {
-            var scorelist = await _context.SurveyScores.Where(x => x.SurveyGeneratorId == score.SurveyGeneratorId).ToListAsync();
-            var updateScore = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == score.SurveyGeneratorId);
-            foreach (var items in scorelist)
+
+            var updateScore = await _context.GroupSurvey.Where(x => x.GroupsId == score.GroupsId
+            && x.IsActive == true).ToListAsync();
+            foreach (var items in updateScore)
             {
 
-                var scores = await _context.SurveyScores.FirstOrDefaultAsync(x => x.Id == items.Id);
-                if (scores != null)
-                {
-                    scores.UpdatedBy = score.UpdatedBy;
-                    scores.UpdatedAt = score.UpdatedAt;
-                    updateScore.UpdatedBy = score.UpdatedBy;
-                    updateScore.UpdatedAt = score.UpdatedAt;
-                    updateScore.IsTransacted = true;
-                }
+
+
+                items.UpdatedBy = score.UpdatedBy;
+                items.UpdatedAt = score.UpdatedAt;
+                items.IsTransacted = true;
+ 
             }
             await _context.SaveChangesAsync();
 

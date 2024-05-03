@@ -78,11 +78,11 @@ namespace RDFSurveyForm.Controllers.SetupController
             return Ok(users);
         }
 
-        [HttpPut("UpdateScore/{surveyGeneratorId:int}")]
-        public async Task<IActionResult> UpdateScore([FromBody] UpdateSurveyScoreDto score, [FromRoute] int surveyGeneratorId)
+        [HttpPut("UpdateScore")]
+        public async Task<IActionResult> UpdateScore([FromBody] UpdateSurveyScoreDto score)
         {
  
-            var surveyscore = await _context.SurveyScores.FirstOrDefaultAsync(x => x.SurveyGeneratorId == surveyGeneratorId);
+            var surveyscore = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.GroupsId == score.GroupsId);
             if (surveyscore == null)
             {
                 return BadRequest("ID does not exist!");
