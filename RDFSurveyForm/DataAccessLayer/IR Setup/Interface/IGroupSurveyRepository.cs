@@ -11,5 +11,6 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Interface
         Task<IReadOnlyList<ViewSurveyDto>> ViewSurvey(int ? id);
         Task<bool> ScoreLimit(AddGroupSurveyDto limit);
         Task<bool> UpdateScore(UpdateSurveyScoreDto score);
+        Task<bool> SetIsActive(int Id);
     }
 }

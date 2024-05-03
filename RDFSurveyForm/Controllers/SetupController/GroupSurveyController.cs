@@ -97,6 +97,17 @@ namespace RDFSurveyForm.Controllers.SetupController
 
         }
 
+        [HttpPatch("SetIsActive/{Id:int}")]
+        public async Task<IActionResult> SetIsActive([FromRoute] int Id)
+        {
+            var setisactive = await _unitofWork.GroupSurvey.SetIsActive(Id);
+            if (setisactive == false)
+            {
+                return BadRequest("Id does not exist!");
+            }
+            return Ok("Updated");
+        }
+
 
     }
 }
