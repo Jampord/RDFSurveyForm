@@ -17,6 +17,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
         public int? Role { get; set; }
         public string UserRoleName { get; set; }
         public ICollection<string> Permission {  get; set; }
+        public bool UpdatePass { get; set; }
         public string Token { get; set; }
 
 
@@ -29,6 +30,7 @@ namespace RDFSurveyForm.JWT.AUTHENTICATION
             UserName = user.UserName;
             //Password = user.Password;
             Role = user.RoleId;
+            UpdatePass = user.UpdatePass;
             Permission = user.Role.Permission;
             Token = token;
 

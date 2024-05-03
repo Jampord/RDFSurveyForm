@@ -11,9 +11,6 @@ namespace RDFSurveyForm.Dto.SetupDto.GroupSurveyDto
         public DateTime CreatedAt { get; set; }
 
         public int? SurveyGeneratorId { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime UpdatedAt { get; set; }
-
 
 
         public List<UpdateSurveyScore> UpdateSurveyScores { get; set; }

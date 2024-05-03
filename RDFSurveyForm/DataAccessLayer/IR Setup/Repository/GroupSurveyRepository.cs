@@ -283,5 +283,25 @@ namespace RDFSurveyForm.DataAccessLayer.IR_Setup.Repository
             return true;
 
         }
+        public async Task<bool> SetIsActive(int Id)
+        {
+            var setIsactive = await _context.GroupSurvey.FirstOrDefaultAsync(x => x.SurveyGeneratorId == Id);
+            var setIsactivee = await _context.SurveyGenerator.FirstOrDefaultAsync(x => x.Id == Id);
+            var setIsactiveee = await _context.SurveyScores.Where(x => x.SurveyGeneratorId == Id).ToListAsync();
+            if (setIsactive != null)
+            {
+                setIsactive.IsActive = !setIsactive.IsActive;
+                setIsactivee.IsActive = !setIsactivee.IsActive;
+                foreach(var item in setIsactiveee) 
+                {
+                    item.IsActive = !item.IsActive;
+
+                }
+                
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }
